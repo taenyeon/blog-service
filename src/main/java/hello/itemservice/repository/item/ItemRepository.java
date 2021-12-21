@@ -1,5 +1,6 @@
-package hello.itemservice.domain.item;
+package hello.itemservice.repository.item;
 
+import hello.itemservice.domain.item.Item;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class ItemRepository {
     // 그래서 ConcurrentHashMap을 주로 사용한다.
     // Long 역시 동시 접근시 문제가 발생할 수 있기 때문에
     // Automic Long과 같은 것으로 바꾸어준다.
-    private static final Map<Long,Item> store = new HashMap<>(); // static
+    private static final Map<Long, Item> store = new HashMap<>(); // static
     private static Long sequence = 0L; // static
 
     public Item save(Item item) {
