@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragments/header.html :: header"></div>
+</head>
+<body>
+<div th:replace="/fragments/nav.html :: nav"></div>
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2>MEMBER LIST</h2>
+    </div>
+    <hr class="my-4">
+    <div>
+        <table class="table text-center">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}">ID</td>
+                <td th:text="${member.name}">NAME</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

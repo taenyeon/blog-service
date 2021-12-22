@@ -1,12 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <!--    타임리프는 기존의 것을 날리고 설정해놓은 것을 덮어쓰는 형태로 많이 사용 -->
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+    <div th:replace="/fragments/header.html :: header"></div>
 </head>
 <body>
+<div th:replace="/fragments/nav.html :: nav"></div>
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
         <h2>상품 목록</h2>

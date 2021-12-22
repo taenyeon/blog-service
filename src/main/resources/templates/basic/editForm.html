@@ -1,16 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container {
-            max-width: 560px;
-        }
-    </style>
+    <div th:replace="/fragments/header.html :: header"></div>
 </head>
 <body>
+<div th:replace="/fragments/nav.html :: nav"></div>
 <div class="container">
     <div class="py-5 text-center">
         <h2>상품 수정 폼</h2>

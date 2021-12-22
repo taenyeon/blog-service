@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="nav">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#" th:href="@{/}">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/basic/items}">게시판</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <span class="nav-item" >
+                <a href="" th:href="@{/members/login}" class="nav-link">로그인</a>
+            </span>
+            <span class="nav-item" >
+                <a href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
+            </span>
+            <span class="nav-item">
+            <a href="" th:href="@{/members}" class="nav-link">회원목록</a>
+
+            </span>
+        </div>
+    </nav>
+
+</div>
+</html>
