@@ -12,12 +12,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" th:href="@{/basic/items}">게시판</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
             </ul>
             <span class="nav-item" >
-                <a href="" th:href="@{/members/login}" class="nav-link">로그인</a>
+                <a th:if="${session.login != null}" th:text="${session.login+'님 환영합니다.'}"class="nav-link disabled" href="#">login</a>
+            </span>
+            <span class="nav-item" >
+                <a th:if="${session.login == null}" href="/members/login" class="nav-link">로그인</a>
+                <a th:if="${session.login != null}" href="/members/logout" class="nav-link">로그아웃</a>
             </span>
             <span class="nav-item" >
                 <a href="" th:href="@{/members/join}" class="nav-link">회원가입</a>

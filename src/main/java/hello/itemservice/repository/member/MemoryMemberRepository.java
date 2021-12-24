@@ -41,6 +41,12 @@ public class MemoryMemberRepository implements MemberRepository {
         return new ArrayList<>(store.values());
     }
 
+    @Override
+    public Optional<String> login(Member member) {
+        return Optional.empty();
+    }
+
+
     public void clearStore(){
         store.clear();
     }

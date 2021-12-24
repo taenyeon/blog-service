@@ -49,4 +49,11 @@ public class MemberService {
     public Optional<Member> findMember(String memberId) {
         return memberRepository.findById(memberId);
     }
+
+    /**
+     * 회원 로그인
+     */
+    public Optional<String> loginMember(Member member) {
+        return memberRepository.login(member);
+    }
 }

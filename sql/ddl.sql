@@ -12,3 +12,6 @@ create table item(
 );
 
 select * from member;
+insert into member values (1,1,1);
+commit;
+delete from member;
