@@ -1,18 +1,16 @@
 package hello.itemservice.controller;
 
-import hello.itemservice.domain.member.Member;
+import hello.itemservice.domain.Member;
 import hello.itemservice.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/members")
@@ -26,29 +24,29 @@ public class MemberController {
     }
 
     @GetMapping
-    public String memberList(Model model){
+    public String memberList(Model model) {
         List<Member> members = memberService.findMembers();
-        model.addAttribute("members",members);
+        model.addAttribute("members", members);
         return "members/memberList";
     }
 
     @GetMapping("/join")
-    public String memberJoinForm(HttpServletRequest request){
+    public String memberJoinForm(HttpServletRequest request) {
         String referer = request.getHeader("REFERER");
         request.getSession().setAttribute("redirectURI", referer);
         return "members/joinMemberForm";
     }
 
     @PostMapping("/join")
-    public String memberJoin(@ModelAttribute Member member,HttpServletRequest request){
+    public String memberJoin(@ModelAttribute Member member, HttpServletRequest request) {
         memberService.join(member);
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
-        return "redirect:"+referer;
+        return "redirect:" + referer;
     }
 
     @GetMapping("/login")
-    public String memberLoginForm(HttpServletRequest request){
+    public String memberLoginForm(HttpServletRequest request) {
         String referer = request.getHeader("REFERER");
         request.getSession().setAttribute("redirectURI", referer);
         return "members/loginMemberForm";
@@ -56,12 +54,19 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public String memberLogin(@ModelAttribute Member member, HttpServletRequest request){
+    public String memberLogin(@ModelAttribute Member member, HttpServletRequest request) {
         String loginId = memberService.loginMember(member).get();
-        request.getSession().setAttribute("login",loginId);
+        request.getSession().setAttribute("login", loginId);
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
-        return "redirect:"+referer;
+        return "redirect:" + referer;
+    }
+
+    @GetMapping("/logout")
+    public String memberLogout(HttpServletRequest request) {
+        request.getSession().removeAttribute("login");
+        String referer = request.getHeader("REFERER");
+        return "redirect:" + referer;
     }
 
 }

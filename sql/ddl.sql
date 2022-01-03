@@ -6,7 +6,7 @@ create table member(
 
 create table item(
                      id number primary key ,
-                     itemname varchar2(30),
+                     item_name varchar2(30),
                      price number(10),
                      quantity number(3)
 );
@@ -15,3 +15,5 @@ select * from member;
 insert into member values (1,1,1);
 commit;
 delete from member;
+select *
+from item;

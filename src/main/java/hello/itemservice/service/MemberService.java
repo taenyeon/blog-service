@@ -1,7 +1,7 @@
 package hello.itemservice.service;
 
-import hello.itemservice.domain.member.Member;
-import hello.itemservice.repository.member.MemberRepository;
+import hello.itemservice.domain.Member;
+import hello.itemservice.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +25,11 @@ public class MemberService {
     public String join(Member member) {
         // 중복 X
         validateDuplicateMember(member); // 중복 회원 검증
-        memberRepository.save(member);
+        if (memberRepository.save(member) != 0){
         return member.getId();
+        } else {
+            throw new IllegalStateException("DB 오류로 회원 가입에 실패하였습니다.");
+        }
     }
 
     private void validateDuplicateMember(Member member) {
@@ -54,6 +57,12 @@ public class MemberService {
      * 회원 로그인
      */
     public Optional<String> loginMember(Member member) {
-        return memberRepository.login(member);
+        Optional<Member> loginMember = memberRepository.login(member.getId(), member.getPwd());
+        if(loginMember.isPresent()){
+        String id = loginMember.get().getId();
+        return Optional.ofNullable(id);
+        } else {
+            throw new IllegalStateException("아이디 또는 비밀번호 오류입니다.");
+        }
     }
 }

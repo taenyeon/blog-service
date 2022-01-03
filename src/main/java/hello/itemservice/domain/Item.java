@@ -1,11 +1,11 @@
-package hello.itemservice.domain.item;
+package hello.itemservice.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter @Setter
-@AllArgsConstructor
 public class Item {
 
     private Long id;
@@ -14,13 +14,6 @@ public class Item {
     // null도 들어갈 수 있는 Integer 사용
     private Integer price;
     private Integer quantity;
-
-    public Item() {
-    }
-
-    public Item(String itemName, Integer price, Integer quantity) {
-        this.itemName = itemName;
-        this.price = price;
-        this.quantity = quantity;
-    }
+    private String writer;
+    private String content;
 }
