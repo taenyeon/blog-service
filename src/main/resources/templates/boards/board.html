@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <div th:replace="/fragments/header.html :: header"></div>
+</head>
+<body>
+<div th:replace="/fragments/nav.html :: nav"></div>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>게시판</h2>
+  </div>
+  <table class="table table-horizontal table-bordered" th:each="file : ${files}">
+
+    <thead class="thead-strong">
+    <tr>
+      <th>게시글번호</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>최종수정일</th>
+      <th th:text="${file.fileName}">파일</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    <tr>
+      <td th:text="${board.num}"></td>
+      <td th:text="${board.title}"></td>
+      <td th:text="${board.writer}"></td>
+      <td th:text="${board.date}"></td>
+      <td><a href="" th:href="@{/file(filePath=${file.filePath},fileName=${file.fileName})}"
+      th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'} ">
+
+      </a></td>
+    </tr>
+    </tbody>
+  </table>
+    <pre th:text="${board.content}"></pre>
+  <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
+          onclick="location.href='addForm.html'"
+          th:onclick="|location.href='@{/boards/modify/}'|${board.id}"
+          type="button">수정
+  </button>
+  <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
+          onclick="location.href='addForm.html'"
+          th:onclick="|location.href='@{/boards/delete/}'|${board.id}"
+          type="button">삭제
+  </button>
+</div> <!-- /container -->
+</body>
+</html>

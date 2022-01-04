@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.itemservice.repository.BoardRepository">
+
+    <insert id="insertBoard" parameterType="hello.itemservice.domain.Board">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select BOARD_ID_UP.nextval from DUAL
+        </selectKey>
+        insert into BOARD(id, title, content, writer, "date", hit)
+        values (#{id},#{title},#{content},#{writer},#{date},0)
+    </insert>
+
+    <update id="updateBoard">
+        update BOARD
+        set title=#{title},
+            content=#{content},
+            "date" = sysdate
+    </update>
+    <update id="hitUp">
+        update BOARD
+        set hit=hit + 1
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteBoard">
+        delete BOARD
+        where ID = #{id};
+    </delete>
+
+    <select id="findAll" resultType="hello.itemservice.domain.Board">
+        select ROWNUM as num, x.*
+        from (select *
+              from BOARD
+              order by ID desc) x
+    </select>
+
+    <select id="findById" resultType="hello.itemservice.domain.Board">
+        select *
+        from BOARD
+        where ID = #{id}
+    </select>
+</mapper>

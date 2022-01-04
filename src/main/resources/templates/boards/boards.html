@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragments/header.html :: header"></div>
+</head>
+<body>
+<div th:replace="/fragments/nav.html :: nav"></div>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>게시판</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button th:if="${session.login != null}" class="btn btn-primary float-end"
+                    onclick="location.href='addForm.html'"
+                    th:onclick="|location.href='@{/boards/add}'|"
+                    type="button">게시물 작성
+            </button>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board : ${boards}">
+                <td><a href="item.html" th:href="@{/boards/{id}(id=${board.id})}"
+                       th:text="${board.num}">번호</a></td>
+                <td><a href="item.html" th:href="@{|/boards/${board.id}|}"
+                       th:text="${board.title}">상품명</a></td>
+                <td th:text="${board.writer}">작성자</td>
+                <td th:text="${board.date}">작성일</td>
+                <td th:text="${board.hit}">조회수</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
