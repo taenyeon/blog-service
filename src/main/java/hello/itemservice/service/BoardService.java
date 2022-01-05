@@ -6,9 +6,9 @@ import hello.itemservice.repository.BoardRepository;
 import hello.itemservice.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,30 +27,40 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public List<Object> searchBoard(String id) {
-        Optional<Board> board = boardRepository.findById(id);
+    public Board searchBoard(String id) {
+        Optional<Board> boardWrap = boardRepository.findById(id);
         List<Files> files = fileRepository.findById(id);
-        List<Object> items = new ArrayList<>();
-        items.add(board);
-        items.add(files);
-        return items;
+        for (Files file : files){
+            System.out.println(file.getBoardId());
+            System.out.println(file.getFileName());
+            System.out.println(file.getFilePath());
+        }
+        Board board = boardWrap.get();
+        board.setFiles(files);
+        return board;
     }
-    public List<Object> visitBoard(String id) {
+    public Board visitBoard(String id) {
         boardRepository.hitUp(id);
-        Optional<Board> board = boardRepository.findById(id);
+        Optional<Board> boardWrap = boardRepository.findById(id);
         List<Files> files = fileRepository.findById(id);
-        List<Object> items = new ArrayList<>();
-        items.add(board);
-        items.add(files);
-        return items;
+        for (Files file : files){
+            System.out.println(file.getBoardId());
+            System.out.println(file.getFileName());
+            System.out.println(file.getFilePath());
+        }
+        Board board = boardWrap.get();
+        board.setFiles(files);
+        return board;
     }
 
-    public int createBoard(Board board, List<Files> files) {
+    public int createBoard(Board board) {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setDate(now);
         boardRepository.insertBoard(board);
-        fileRepository.insertFiles(files);
         return board.getId();
+    }
+    public int createFile(List<Files> files){
+        return fileRepository.insertFiles(files);
     }
 
     public int modifyBoard(Board board) {
@@ -60,7 +70,15 @@ public class BoardService {
     }
 
     public int deleteBoard(String id) {
+        System.out.println(id);
+        List<Files> files = fileRepository.findById(id);
         fileRepository.deleteFiles(id);
+        for (Files file : files) {
+            String filePath = file.getFilePath();
+            System.out.println("filePath = " + filePath);
+            File oldFile = new File(filePath);
+            oldFile.delete();
+        }
         return boardRepository.deleteBoard(id);
     }
 }

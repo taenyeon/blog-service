@@ -14,7 +14,7 @@
                 </li>
             </ul>
             <span class="nav-item" >
-                <a th:if="${session.login != null}" th:text="${session.login+'님 환영합니다.'}"class="nav-link disabled" href="#">login</a>
+                <a th:if="${session.login != null}" th:text="${session.login+'님 환영합니다.'}"class="nav-link" th:href="@{|/members/${session.login}|}" href="#">login</a>
             </span>
             <span class="nav-item" >
                 <a th:if="${session.login == null}" href="/members/login" class="nav-link">로그인</a>

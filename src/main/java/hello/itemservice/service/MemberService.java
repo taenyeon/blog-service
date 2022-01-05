@@ -65,4 +65,15 @@ public class MemberService {
             throw new IllegalStateException("아이디 또는 비밀번호 오류입니다.");
         }
     }
+    public int updateMember(Member member){
+        int result = memberRepository.update(member);
+        if (result != 0){
+            return result;
+        } else {
+            throw new IllegalStateException("업데이트에 실패하였습니다.");
+        }
+    }
+    public Optional<Member> findMemberByEmail(String email){
+        return memberRepository.findByEmail(email);
+    }
 }

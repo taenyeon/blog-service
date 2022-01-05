@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.itemservice.repository.MemberRepository">
+    <update id="update" parameterType="hello.itemservice.domain.Member">
+        update MEMBER set tel=#{tel},BIRTH=#{birth},EMAIL=#{email}
+    </update>
 
     <select id="findAll" resultType="hello.itemservice.domain.Member">
         select *
@@ -18,7 +21,7 @@
         values (#{id},
                 #{pwd},
                 #{name},
-                #{adress,jdbcType=VARCHAR},
+                #{adress},
                 #{tel,jdbcType=VARCHAR},
                 #{birth,jdbcType=DATE},
                 #{email,jdbcType=VARCHAR})
@@ -29,5 +32,8 @@
         from member
         where id = #{id}
           and pwd = #{pwd}
+    </select>
+    <select id="findByEmail" resultType="hello.itemservice.domain.Member">
+        select * from MEMBER where EMAIL=#{email}
     </select>
 </mapper>

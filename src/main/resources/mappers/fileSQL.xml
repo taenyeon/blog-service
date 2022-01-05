@@ -21,7 +21,7 @@
     </select>
 
     <select id="findById" resultType="hello.itemservice.domain.Files">
-        select *
+        select file_path as filePath, file_name as fileName, file_size as fileSize, board_id as id
         from BOARD_FILES
         where BOARD_ID = #{id}
     </select>

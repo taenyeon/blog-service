@@ -22,9 +22,9 @@
         where ID = #{id}
     </update>
 
-    <delete id="deleteBoard">
+    <delete id="deleteBoard" parameterType="string">
         delete BOARD
-        where ID = #{id};
+        where ID = #{id}
     </delete>
 
     <select id="findAll" resultType="hello.itemservice.domain.Board">

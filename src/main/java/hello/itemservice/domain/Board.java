@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter @Setter
 public class Board {
@@ -22,4 +23,6 @@ public class Board {
     private LocalDate date;
 
     private int hit;
+
+    private List<Files> files;
 }

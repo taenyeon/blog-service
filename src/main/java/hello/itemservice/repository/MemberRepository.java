@@ -13,4 +13,6 @@ public interface MemberRepository {
     Optional<Member> findById(String id);
     List<Member> findAll();
     Optional<Member> login(@Param("id") String id,@Param("pwd") String pwd);
+    int update(Member member);
+    Optional<Member> findByEmail(@Param("email") String email);
 }
