@@ -1,7 +1,9 @@
 package hello.itemService.controller;
 
 import hello.itemService.domain.Board;
+import hello.itemService.domain.Reply;
 import hello.itemService.service.BoardService;
+import hello.itemService.service.ajax.ReplyServiceAjax;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +25,11 @@ public class BoardController {
     String path;
 
     private final BoardService boardService;
+    private final ReplyServiceAjax replyServiceAjax;
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, ReplyServiceAjax replyServiceAjax) {
         this.boardService = boardService;
+        this.replyServiceAjax = replyServiceAjax;
     }
 
     @GetMapping
@@ -98,12 +102,11 @@ public class BoardController {
     }
 
 
-
     @GetMapping("/file")
     public void fileDownload(@RequestParam String filePath,
                              @RequestParam String fileName,
                              HttpServletResponse response) {
-        File file = new File(path +"/"+ filePath);
+        File file = new File(path + "/" + filePath);
         FileInputStream fileInputStream;
         BufferedInputStream bufferedInputStream = null;
         ServletOutputStream servletOutputStream = null;
@@ -123,18 +126,23 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try{
+            try {
                 if (servletOutputStream != null) {
                     servletOutputStream.close();
                 }
-                if (bufferedInputStream != null){
+                if (bufferedInputStream != null) {
                     bufferedInputStream.close();
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 throw new IllegalStateException("서버 오류로 다운로드 로직을 종료하는데 실패하였습니다.");
             }
-
         }
+    }
+
+    @PostMapping("/reply/add")
+    @ResponseBody
+    public String addReply(@ModelAttribute Reply reply) {
+        return replyServiceAjax.addReply(reply);
     }
 
 }

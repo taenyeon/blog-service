@@ -12,35 +12,35 @@
             $("#delete").click(function (){
                 location.href = "/boards/"+val+"/delete";
             });
-            // $("#replyCommit").click(function (){
-            //     let login;
-            //     let boardId =[[${board.id}]];
-            //     let replyContent = $("#reply").val();
-            //
-            //     if ([[${session.login}]] === null){
-            //         alert("로그인 후 이용해주세요.");
-            //     } else {
-            //         login = [[${session.login}]];
-            //     }
-            //     $.ajax({
-            //         type:"POST",
-            //         url : "/boards/reply/add",
-            //         cache : false,
-            //         data : {
-            //             "replyContent" : replyContent,
-            //             "replyWriter" : login,
-            //             "boardId" : boardId
-            //         } ,
-            //         success : function (data){
-            //             if (data === "x"){
-            //                 alert("댓글 등록에 실패하였습니다.")
-            //             }else {
-            //                 alert("댓글 등록에 성공하였습니다.")
-            //             location.reload();
-            //             }
-            //         }
-            //     })
-            // });
+            $("#replyCommit").click(function (){
+                let login;
+                let boardId =[[${board.id}]];
+                let replyContent = $("#reply").val();
+
+                if ([[${session.login}]] === null){
+                    alert("로그인 후 이용해주세요.");
+                } else {
+                    login = [[${session.login}]];
+                }
+                $.ajax({
+                    type:"POST",
+                    url : "/boards/reply/add",
+                    cache : false,
+                    data : {
+                        "replyContent" : replyContent,
+                        "replyWriter" : login,
+                        "boardId" : boardId
+                    } ,
+                    success : function (data){
+                        if (data === "x"){
+                            alert("댓글 등록에 실패하였습니다.")
+                        }else {
+                            alert("댓글 등록에 성공하였습니다.")
+                        location.reload();
+                        }
+                    }
+                })
+            });
 
         });
         /*]]>*/
