@@ -1,6 +1,5 @@
-package hello.itemservice.domain;
+package hello.itemService.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

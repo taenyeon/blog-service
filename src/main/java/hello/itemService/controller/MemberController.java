@@ -1,8 +1,8 @@
-package hello.itemservice.controller;
+package hello.itemService.controller;
 
-import hello.itemservice.domain.Member;
-import hello.itemservice.service.EmailService;
-import hello.itemservice.service.MemberService;
+import hello.itemService.domain.Member;
+import hello.itemService.service.ajax.EmailServiceAjax;
+import hello.itemService.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,12 +17,12 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final EmailService emailService;
+    private final EmailServiceAjax emailServiceAjax;
 
     @Autowired
-    public MemberController(MemberService memberService, EmailService emailService) {
+    public MemberController(MemberService memberService, EmailServiceAjax emailServiceAjax) {
         this.memberService = memberService;
-        this.emailService = emailService;
+        this.emailServiceAjax = emailServiceAjax;
     }
 
     @GetMapping
@@ -44,7 +44,7 @@ public class MemberController {
         memberService.join(member);
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
-        return "home";
+        return "index";
     }
 
     @GetMapping("/login")
@@ -89,7 +89,7 @@ public class MemberController {
             throw new IllegalStateException("현재 세션에서 제한된 접근입니다.");
         }
     }
-
+    // 회원가입 관련 ajax
     @GetMapping("/sendEmail")
     @ResponseBody
     public String joinSendMail(@RequestParam("email") String email) throws Exception {
@@ -97,7 +97,7 @@ public class MemberController {
         if (member.isPresent()){
          return "x";
         } else {
-        return emailService.sendSimpleMessage(email);
+        return emailServiceAjax.sendSimpleMessage(email);
         }
     }
     @GetMapping("/checkId")

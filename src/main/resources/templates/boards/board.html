@@ -2,17 +2,48 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="/fragments/header.html :: header"></div>
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         $(function(){
             let val = $("#id").text();
             $("#modify").click(function (){
-                location.href = "/boards/modify/" + val;
-            })
+                location.href = "/boards/"+val+"/modify";
+            });
             $("#delete").click(function (){
-                location.href = "/boards/delete/" + val;
-            })
+                location.href = "/boards/"+val+"/delete";
+            });
+            // $("#replyCommit").click(function (){
+            //     let login;
+            //     let boardId =[[${board.id}]];
+            //     let replyContent = $("#reply").val();
+            //
+            //     if ([[${session.login}]] === null){
+            //         alert("로그인 후 이용해주세요.");
+            //     } else {
+            //         login = [[${session.login}]];
+            //     }
+            //     $.ajax({
+            //         type:"POST",
+            //         url : "/boards/reply/add",
+            //         cache : false,
+            //         data : {
+            //             "replyContent" : replyContent,
+            //             "replyWriter" : login,
+            //             "boardId" : boardId
+            //         } ,
+            //         success : function (data){
+            //             if (data === "x"){
+            //                 alert("댓글 등록에 실패하였습니다.")
+            //             }else {
+            //                 alert("댓글 등록에 성공하였습니다.")
+            //             location.reload();
+            //             }
+            //         }
+            //     })
+            // });
 
-        })
+        });
+        /*]]>*/
     </script>
 </head>
 <body>
@@ -42,8 +73,8 @@
         </tbody>
     </table>
     <div th:each="file : ${board.files}">
-        첨부파일 <a href="" th:href="@{/boards/file(filePath=${file.filePath},fileName=${file.fileName})}"
-                th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'} "></a>
+        첨부파일 <a href="" download th:href="@{/boards/file(filePath=${file.filePath},fileName=${file.fileName})}"
+                th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
     </div>
     <pre th:text="${board.content}"></pre>
     <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
@@ -54,6 +85,20 @@
             id="delete" name="delete"
             type="button">삭제
     </button>
+    <div>
+        <form action="">
+            <label for="reply">댓글 작성하기</label>
+            <textarea id="reply" placeholder="댓글을 입력해주세요."></textarea>
+            <button type="button" id="replyCommit">쓰기</button>
+        </form>
+        <strong>댓글</strong>
+        <div th:if="${board.replies.size() == 0}">댓글이 없습니다.</div>
+        <div th:if="${board.replies.size() != 0}" th:each="reply : ${board.replies}" style="border: 1px solid #cccccc">
+            <b th:text="${reply.replyWriter}">작성자</b>
+            <span th:text="${reply.replyDate}"></span>
+            <pre th:text="${reply.replyContent}">댓글 본문</pre>
+        </div>
+        </div>
 </div> <!-- /container -->
 </body>
 </html>

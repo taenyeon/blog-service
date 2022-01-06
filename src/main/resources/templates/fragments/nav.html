@@ -21,7 +21,7 @@
                 <a th:if="${session.login != null}" href="/members/logout" class="nav-link">로그아웃</a>
             </span>
             <span class="nav-item" >
-                <a href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
+                <a th:if="${session.login == null}" href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
             </span>
             <span class="nav-item">
             <a href="" th:href="@{/members}" class="nav-link">회원목록</a>

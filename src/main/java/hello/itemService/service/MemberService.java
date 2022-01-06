@@ -1,7 +1,7 @@
-package hello.itemservice.service;
+package hello.itemService.service;
 
-import hello.itemservice.domain.Member;
-import hello.itemservice.repository.MemberRepository;
+import hello.itemService.domain.Member;
+import hello.itemService.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

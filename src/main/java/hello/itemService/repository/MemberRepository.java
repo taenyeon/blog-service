@@ -1,6 +1,6 @@
-package hello.itemservice.repository;
+package hello.itemService.repository;
 
-import hello.itemservice.domain.Member;
+import hello.itemService.domain.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

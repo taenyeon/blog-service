@@ -1,4 +1,4 @@
-package hello.itemservice.config;
+package hello.itemService.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

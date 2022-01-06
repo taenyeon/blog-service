@@ -1,4 +1,4 @@
-package hello.itemservice.service;
+package hello.itemService.service.ajax;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -11,7 +11,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
 @Service
-public class EmailService {
+public class EmailServiceAjax {
 
     @Autowired
     JavaMailSender emailSender;

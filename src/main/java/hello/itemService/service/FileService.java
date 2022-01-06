@@ -1,7 +1,7 @@
-package hello.itemservice.service;
+package hello.itemService.service;
 
-import hello.itemservice.domain.Files;
-import hello.itemservice.repository.FileRepository;
+import hello.itemService.domain.Files;
+import hello.itemService.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class FileService {
     public FileService(FileRepository fileRepository) {this.fileRepository = fileRepository;}
 
     public List<Files> getFiles(String id){
-        return fileRepository.findById(id);
+        return fileRepository.findByBoardId(id);
     }
     public int createFiles(List<Files> files){
         return fileRepository.insertFiles(files);

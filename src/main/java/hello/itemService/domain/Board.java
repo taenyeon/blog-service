@@ -1,4 +1,4 @@
-package hello.itemservice.domain;
+package hello.itemService.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +25,5 @@ public class Board {
     private int hit;
 
     private List<Files> files;
+    private List<Reply> replies;
 }

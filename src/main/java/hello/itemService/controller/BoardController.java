@@ -1,8 +1,7 @@
-package hello.itemservice.controller;
+package hello.itemService.controller;
 
-import hello.itemservice.domain.Board;
-import hello.itemservice.domain.Files;
-import hello.itemservice.service.BoardService;
+import hello.itemService.domain.Board;
+import hello.itemService.service.BoardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -57,28 +53,10 @@ public class BoardController {
                            RedirectAttributes redirectAttributes,
                            HttpSession session) throws IOException {
 
-        String originalName, changedName;
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
         int result = boardService.createBoard(board);
-
-        List<Files> filesList = new ArrayList<>();
-        for (MultipartFile file : fileList) {
-            Files fileDomain = new Files();
-            originalName = file.getOriginalFilename();
-            LocalDateTime date = LocalDateTime.now();
-            String getDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-            changedName = getDate + "_" + originalName;
-            File f = new File(changedName);
-            long size = f.length();
-            file.transferTo(f);
-            fileDomain.setBoardId(result);
-            fileDomain.setFileName(originalName);
-            fileDomain.setFilePath(changedName);
-            fileDomain.setFileSize(size);
-            filesList.add(fileDomain);
-        }
-        boardService.createFile(filesList);
+        boardService.fileUpload(fileList, result);
         if (result != 0) {
             redirectAttributes.addAttribute("id", result);
         } else {
@@ -87,7 +65,7 @@ public class BoardController {
         return "redirect:/boards/{id}";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/{id}/delete")
     public String deleteBoard(@PathVariable String id) {
         int result = boardService.deleteBoard(id);
         if (result == 0) {
@@ -96,18 +74,23 @@ public class BoardController {
         return "redirect:/boards";
     }
 
-    @GetMapping("/modify/{id}")
+    @GetMapping("/{id}/modify")
     public String modifyForm(@PathVariable String id, Model model) {
         Board board = boardService.searchBoard(id);
         model.addAttribute(board);
         return "/boards/modifyBoard";
     }
 
-    @PostMapping("/modify/{id}")
+    @PostMapping("/{id}/modify")
     public String modifyBoard(@PathVariable String id,
-                              @ModelAttribute Board board) {
+                              @RequestParam("fileList") MultipartFile[] fileList,
+                              HttpSession session,
+                              @ModelAttribute Board board) throws IOException {
         board.setId(Integer.parseInt(id));
+        String login = (String) session.getAttribute("login");
+        board.setWriter(login);
         int result = boardService.modifyBoard(board);
+        boardService.fileUpload(fileList, result);
         if (result == 0) {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
@@ -115,12 +98,12 @@ public class BoardController {
     }
 
 
+
     @GetMapping("/file")
     public void fileDownload(@RequestParam String filePath,
                              @RequestParam String fileName,
                              HttpServletResponse response) {
         File file = new File(path +"/"+ filePath);
-
         FileInputStream fileInputStream;
         BufferedInputStream bufferedInputStream = null;
         ServletOutputStream servletOutputStream = null;

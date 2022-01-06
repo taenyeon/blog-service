@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.itemService.repository.ReplyRepository">
+    <insert id="insertReply">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select REPLY_ID_UP.nextval from DUAL
+        </selectKey>
+        insert into REPLY(reply_id, reply_content, reply_writer, reply_date, board_id)
+        values (#{replyId},#{replyContent},#{replyWriter},#{replyDate},#{boardId})
+    </insert>
+    <update id="updateReply">
+        update REPLY
+        set REPLY_CONTENT=#{replyContent},
+            REPLY_DATE = #{replyDate}
+        where REPLY_ID = #{replyId}
+    </update>
+    <delete id="deleteReply">
+        delete REPLY
+        where REPLY_ID = #{replyId}
+    </delete>
+
+    <select id="findAll" resultType="hello.itemService.domain.Reply">
+        select *
+        from REPLY
+        order by REPLY_ID desc
+    </select>
+    <select id="findByBoardId" resultType="hello.itemService.domain.Reply">
+        select reply_id as replyId, reply_content as replyContent, reply_writer as replyWriter, reply_date as replyDate, board_id as boardId
+        from REPLY
+        where BOARD_ID = #{boardId}
+        order by REPLY_ID desc
+    </select>
+</mapper>
