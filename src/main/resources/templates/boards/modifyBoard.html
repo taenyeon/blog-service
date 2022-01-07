@@ -2,6 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="/fragments/header.html :: header"></div>
+    <script>
+        $(function (){
+            $("#cancel").click(function (){
+                window.history.back();
+            })
+        })
+    </script>
 </head>
 <body>
 <div th:replace="/fragments/nav.html :: nav"></div>
@@ -23,7 +30,7 @@
             <input type="file" name="fileList" id="fileList" multiple>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">수정</button>
-        <button type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.id}|}" href="/boards"></a>취소</button>
+        <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.id}|}" href="/boards"></a>취소</button>
     </form>
 </div> <!-- /container -->
 </body>

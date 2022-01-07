@@ -145,4 +145,15 @@ public class BoardController {
         return replyServiceAjax.addReply(reply);
     }
 
+    @PostMapping("/reply/modify")
+    @ResponseBody
+    public String modifyReply(@ModelAttribute Reply reply){
+        return replyServiceAjax.modifyReply(reply);
+    }
+
+    @PostMapping("/reply/delete")
+    @ResponseBody
+    public String deleteReply(@RequestParam("replyId") String replyId){
+        return replyServiceAjax.deleteReply(replyId);
+    }
 }

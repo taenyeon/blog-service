@@ -4,43 +4,110 @@
     <div th:replace="/fragments/header.html :: header"></div>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        $(function(){
+        $(function () {
+            let modifyStatus = false;
+
             let val = $("#id").text();
-            $("#modify").click(function (){
-                location.href = "/boards/"+val+"/modify";
+            $("#mod").click(function () {
+                location.href = "/boards/" + val + "/modify";
             });
-            $("#delete").click(function (){
-                location.href = "/boards/"+val+"/delete";
+            $("#del").click(function () {
+                let result = confirm("게시글을 삭제하시겠습니까?");
+                if (result){
+                location.href = "/boards/" + val + "/delete";
+                }
             });
-            $("#replyCommit").click(function (){
+            $("#replyCommit").click(function () {
                 let login;
-                let boardId =[[${board.id}]];
+                let boardId = [[${board.id}]];
                 let replyContent = $("#reply").val();
 
-                if ([[${session.login}]] === null){
+                if ([[${session.login}]] === null) {
                     alert("로그인 후 이용해주세요.");
                 } else {
                     login = [[${session.login}]];
-                }
-                $.ajax({
-                    type:"POST",
-                    url : "/boards/reply/add",
-                    cache : false,
-                    data : {
-                        "replyContent" : replyContent,
-                        "replyWriter" : login,
-                        "boardId" : boardId
-                    } ,
-                    success : function (data){
-                        if (data === "x"){
-                            alert("댓글 등록에 실패하였습니다.")
-                        }else {
-                            alert("댓글 등록에 성공하였습니다.")
-                        location.reload();
+                    $.ajax({
+                        type: "POST",
+                        url: "/boards/reply/add",
+                        cache: false,
+                        data: {
+                            "replyContent": replyContent,
+                            "replyWriter": login,
+                            "boardId": boardId
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 등록에 실패하였습니다.")
+                            } else {
+                                alert("댓글 등록에 성공하였습니다.")
+                                location.reload();
+                            }
                         }
+                    })
+                }
+            });
+            // 댓글 수정
+            $("[id^=modify]").click(function (){
+                // 클릭한 버튼의 상위요소들 div 중, 가장 가까운 div의 id 값(댓글 번호) 가져옴.
+                let id = $(this).closest("div").attr("id");
+                // '-'를 기준으로 잘라 뒤에 있는 댓글의 번호를 가져옴.
+                let str =id.split('-')[1];
+                // 현재 값을 가져오는 작업이 안되서 일단 보류
+                if (modifyStatus){
+                let content = $("#modifyContent").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/boards/reply/modify",
+                    cache: false,
+                    data: {
+                        "replyId" : str,
+                        "replyContent" : content
+                    },
+                    success: function (data) {
+                        if (data === "x") {
+                            alert("댓글 수정에 실패하였습니다.")
+                        } else {
+                            alert("댓글 수정에 성공하였습니다.")
+                        }
+                            location.reload();
                     }
                 })
+                } else {
+                    // 해당 댓글 번호의 div 에서 하위 요소인 content를 가져옴
+                    let content = $('#'+id).children(".content");
+                    // 이 부분이 오류 발생 - null 값이 나옴.
+                   let contentVal = content.attr("text");
+                   alert(contentVal);
+                   // pre 태그의  content를 textatrea로 변경하여 텍스트를 추가할 수 있도록 함.
+                    content.replaceWith('<textarea id="modifyContent"/>');
+                    $("#modifyContent").val(contentVal);
+                    modifyStatus = true;
+                }
             });
+            // 댓글 삭제
+            $("[id^=delete]").click(function (){
+                let id = $(this).attr("id");
+                let str = id.split('-')[1];
+                var result = confirm("댓글을 삭제하시겠습니까?");
+                if (result){
+                    $.ajax({
+                        type: "POST",
+                        url: "/boards/reply/delete",
+                        cache: false,
+                        data: {
+                            "replyId" : str
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 삭제에 실패하였습니다.")
+                            } else {
+                                alert("댓글 삭제에 성공하였습니다.")
+                            }
+                            location.reload();
+                        }
+                    })
+                }
+            })
 
         });
         /*]]>*/
@@ -78,27 +145,33 @@
     </div>
     <pre th:text="${board.content}"></pre>
     <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
-            id="modify" name="modify"
+            id="mod" name="mod"
             type="button">수정
     </button>
     <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
-            id="delete" name="delete"
+            id="del" name="del"
             type="button">삭제
     </button>
     <div>
         <form action="">
-            <label for="reply">댓글 작성하기</label>
-            <textarea id="reply" placeholder="댓글을 입력해주세요."></textarea>
+            <b>댓글 작성하기</b>
+            <textarea id="reply" placeholder="댓글을 입력해주세요." style="width: 100%"></textarea>
             <button type="button" id="replyCommit">쓰기</button>
         </form>
         <strong>댓글</strong>
         <div th:if="${board.replies.size() == 0}">댓글이 없습니다.</div>
         <div th:if="${board.replies.size() != 0}" th:each="reply : ${board.replies}" style="border: 1px solid #cccccc">
-            <b th:text="${reply.replyWriter}">작성자</b>
-            <span th:text="${reply.replyDate}"></span>
-            <pre th:text="${reply.replyContent}">댓글 본문</pre>
+            <div th:id="'reply-'+${reply.replyId}">
+                <b th:text="${reply.replyWriter}">작성자</b>
+                <p th:text="${reply.replyDate}"></p>
+                <pre class="content" th:text="${reply.replyContent}">댓글 본문</pre>
+                <p th:if="${reply.replyWriter == session.login}" id="test">
+                    <button type="button" value="수정" th:id="'modify-'+${reply.replyId}">수정</button>
+                    <button type="button" value="삭제" th:id="'delete-'+${reply.replyId}">삭제</button>
+                </p>
+            </div>
         </div>
-        </div>
+    </div>
 </div> <!-- /container -->
 </body>
 </html>

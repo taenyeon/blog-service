@@ -4,7 +4,7 @@ import hello.itemService.domain.Reply;
 import hello.itemService.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
@@ -16,9 +16,29 @@ public class ReplyServiceAjax {
     }
 
     public String addReply(Reply reply){
-        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         reply.setReplyDate(now);
         int result = replyRepository.insertReply(reply);
+        if (result != 0){
+            return "o";
+        } else {
+            return "x";
+        }
+    }
+
+    public String modifyReply(Reply reply){
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        reply.setReplyDate(now);
+        int result = replyRepository.updateReply(reply);
+        if (result != 0){
+            return "o";
+        } else {
+            return "x";
+        }
+    }
+
+    public String deleteReply(String replyId){
+        int result = replyRepository.deleteReply(replyId);
         if (result != 0){
             return "o";
         } else {

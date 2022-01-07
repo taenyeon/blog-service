@@ -11,7 +11,7 @@ public interface ReplyRepository {
     List<Reply> findAll();
     List<Reply> findByBoardId(@Param("boardId") String boardId);
     int insertReply(Reply reply);
-    int deleteReply(@Param("id") String id);
+    int deleteReply(@Param("replyId") String replyId);
     int updateReply(Reply reply);
 
 }
