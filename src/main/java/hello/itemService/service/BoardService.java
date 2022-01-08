@@ -83,7 +83,7 @@ public class BoardService {
         for (Files file : files) {
             String filePath = file.getFilePath();
             System.out.println("filePath = " + filePath);
-            File oldFile = new File(path +"/"+ filePath);
+            File oldFile = new File(path +"/boards/"+ filePath);
             oldFile.delete();
         }
         return boardRepository.deleteBoard(id);
@@ -100,8 +100,8 @@ public class BoardService {
                 LocalDateTime date = LocalDateTime.now();
                 String getDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
                 changedName = getDate + "_" + originalName;
-                File f = new File(changedName);
-                long size = f.length();
+                File f = new File(path+"/board/"+changedName);
+                long size = file.getSize() / 1024; // kb
                 file.transferTo(f);
                 fileDomain.setBoardId(id);
                 fileDomain.setFileName(originalName);

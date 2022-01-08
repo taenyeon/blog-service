@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.itemService.repository.MemberRepository">
-    <update id="update" parameterType="hello.itemService.domain.Member">
-        update MEMBER set tel=#{tel},BIRTH=#{birth},EMAIL=#{email}
+
+    <update id="update">
+        update MEMBER
+        set tel=#{tel},
+            birth=#{birth},
+            adress=#{adress},
+            img=#{img}
+        where id = #{id}
     </update>
 
     <select id="findAll" resultType="hello.itemService.domain.Member">
@@ -24,7 +30,7 @@
                 #{adress},
                 #{tel,jdbcType=VARCHAR},
                 #{birth,jdbcType=DATE},
-                #{email,jdbcType=VARCHAR})
+                #{email})
     </insert>
 
     <select id="login" resultType="hello.itemService.domain.Member" parameterType="string">
@@ -34,6 +40,8 @@
           and pwd = #{pwd}
     </select>
     <select id="findByEmail" resultType="hello.itemService.domain.Member">
-        select * from MEMBER where EMAIL=#{email}
+        select *
+        from MEMBER
+        where EMAIL = #{email}
     </select>
 </mapper>

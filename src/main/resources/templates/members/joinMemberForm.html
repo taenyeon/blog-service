@@ -35,8 +35,8 @@
                             alert("이메일이 중복되었습니다. 다른 이메일을 사용해주세요.")
                         } else {
                             alert("인증번호 발송이 완료되었습니다.\n입력한 이메일에서 인증번호 확인을 해주십시오.");
-                            $("#email").attr("disabled", true);
-                            $("#code").removeAttr("disabled");
+                            $("#email").attr("readonly", true);
+                            $("#code").removeAttr("readonly");
                         }
                     }
 
@@ -46,14 +46,14 @@
             $("#checkCode").click(function () {
                 if ($("#code").val() === code) {
                     alert("인증코드가 확인되었습니다.");
-                    $("#code").attr("disabled", true);
-                    $("#email").attr("disabled", true);
-                    $("#checkCode").attr("disabled", true);
-                    $("#getCode").attr("disabled", true);
+                    $("#code").attr("readonly", true);
+                    $("#email").attr("readonly", true);
+                    $("#checkCode").attr("readonly", true);
+                    $("#getCode").attr("readonly", true);
                     checkEmail = true;
                 } else {
                     alert("인증코드가 틀립니다. 다시 시도해주세요.")
-                    $("#email").removeAttr("disabled");
+                    $("#email").removeAttr("readonly");
                     $("#code").attr("autofocus", true);
                 }
             });
@@ -110,7 +110,7 @@
         <div>
             <label for="code">인증번호</label>
             <input type="text" id="code" name="code" class="form-control"
-                   placeholder="코드를 입력하세요." required disabled>
+                   placeholder="코드를 입력하세요." required readonly>
             <button type="button" class="w-100 btn btn-primary btn-sm" id="checkCode" name="checkCode">인증하기
             </button>
         </div>

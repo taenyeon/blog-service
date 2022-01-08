@@ -15,6 +15,7 @@
         set title=#{title},
             content=#{content},
             "date" = #{date}
+        where id = #{id}
     </update>
     <update id="hitUp">
         update BOARD

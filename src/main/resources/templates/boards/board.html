@@ -75,12 +75,13 @@
                 } else {
                     // 해당 댓글 번호의 div 에서 하위 요소인 content를 가져옴
                     let content = $('#'+id).children(".content");
-                    // 이 부분이 오류 발생 - null 값이 나옴.
-                   let contentVal = content.attr("text");
-                   alert(contentVal);
+                    // content 내용을 가져와 텍스트 바꿈.
+                   let contentVal = content.text();
                    // pre 태그의  content를 textatrea로 변경하여 텍스트를 추가할 수 있도록 함.
                     content.replaceWith('<textarea id="modifyContent"/>');
                     $("#modifyContent").val(contentVal);
+                    $('#delete-'+str).replaceWith('<button type="button" value="취소" id="cancel-'+str+'">취소</button>');
+
                     modifyStatus = true;
                 }
             });
@@ -107,9 +108,17 @@
                         }
                     })
                 }
-            })
+            });
+
 
         });
+            $(document).on("click","[id^=cancel]",function (){
+                location.reload();
+            });
+
+            $(document).on("click","#menu",function (){
+                location.href = "/boards";
+            })
         /*]]>*/
     </script>
 </head>
@@ -144,19 +153,23 @@
                 th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
     </div>
     <pre th:text="${board.content}"></pre>
-    <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
+    <div>
+    <button type="button" class="btn btn-primary float-right" id="menu" name="menu">목록</button>
+    <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
             id="mod" name="mod"
             type="button">수정
     </button>
-    <button th:if="${session.login == board.writer}" class="btn btn-primary float-end"
+    <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
             id="del" name="del"
             type="button">삭제
     </button>
+    </div>
+    <br><br><br>
     <div>
         <form action="">
             <b>댓글 작성하기</b>
             <textarea id="reply" placeholder="댓글을 입력해주세요." style="width: 100%"></textarea>
-            <button type="button" id="replyCommit">쓰기</button>
+            <button type="button" class="btn btn-primary btn-sm" id="replyCommit">쓰기</button>
         </form>
         <strong>댓글</strong>
         <div th:if="${board.replies.size() == 0}">댓글이 없습니다.</div>
@@ -166,8 +179,8 @@
                 <p th:text="${reply.replyDate}"></p>
                 <pre class="content" th:text="${reply.replyContent}">댓글 본문</pre>
                 <p th:if="${reply.replyWriter == session.login}" id="test">
-                    <button type="button" value="수정" th:id="'modify-'+${reply.replyId}">수정</button>
-                    <button type="button" value="삭제" th:id="'delete-'+${reply.replyId}">삭제</button>
+                    <button type="button" class="btn btn-primary btn-sm" value="수정" th:id="'modify-'+${reply.replyId}">수정</button>
+                    <button type="button" class="btn btn-primary btn-sm" value="삭제" th:id="'delete-'+${reply.replyId}">삭제</button>
                 </p>
             </div>
         </div>

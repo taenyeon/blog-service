@@ -94,7 +94,7 @@ public class BoardController {
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
         int result = boardService.modifyBoard(board);
-        boardService.fileUpload(fileList, result);
+        boardService.fileUpload(fileList,Integer.parseInt(id) );
         if (result == 0) {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
@@ -106,7 +106,7 @@ public class BoardController {
     public void fileDownload(@RequestParam String filePath,
                              @RequestParam String fileName,
                              HttpServletResponse response) {
-        File file = new File(path + "/" + filePath);
+        File file = new File(path + "/board/" + filePath);
         FileInputStream fileInputStream;
         BufferedInputStream bufferedInputStream = null;
         ServletOutputStream servletOutputStream = null;
