@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Reply {
     private int replyId;
+
     private String replyContent;
+
     private String replyWriter;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")

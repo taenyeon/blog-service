@@ -28,16 +28,28 @@
         where ID = #{id}
     </delete>
 
-    <select id="findAll" resultType="hello.itemService.domain.Board">
-        select ROWNUM as num, x.*
-        from (select *
-              from BOARD
-              order by ID desc) x
+    <select id="findByNum" resultType="hello.itemService.domain.Board"
+            parameterType="hello.itemService.domain.Pagination">
+        <![CDATA[
+        SELECT *
+        FROM (
+                 SELECT ROW_NUMBER() over (order by id desc ) AS num,
+                        b.*
+                 FROM board b
+                 WHERE rownum <= #{endList}
+             )
+        WHERE #{startList} < num
+        ]]>
     </select>
 
     <select id="findById" resultType="hello.itemService.domain.Board">
         select *
         from BOARD
         where ID = #{id}
+    </select>
+
+    <select id="getBoardListCnt" resultType="int">
+        select count(*) as listCnt
+        from BOARD
     </select>
 </mapper>

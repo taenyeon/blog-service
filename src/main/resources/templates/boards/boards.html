@@ -2,6 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="/fragments/header.html :: header"></div>
+    <script>
+            //이전 버튼 이벤트
+            function fn_prev(page, range, rangeSize) {
+                page = ((range - 2) * rangeSize) + 1;
+                range = range - 1;
+
+                let url = "/boards";
+                url = url + "?page=" + page;
+                url = url + "&range=" + range;
+
+                location.href = url;
+            }
+
+            //페이지 번호 클릭
+            function fn_pagination(page, range) {
+                let url = "/boards";
+                url = url + "?page=" + page;
+                url = url + "&range=" + range;
+
+                location.href = url;
+            }
+
+            //다음 버튼 이벤트
+            function fn_next(page, range, rangeSize) {
+                page = parseInt((range * rangeSize)) + 1;
+                range = parseInt(range) + 1;
+
+                let url = "/boards";
+                url = url + "?page=" + page;
+                url = url + "&range=" + range;
+
+                location.href = url;
+            }
+    </script>
 </head>
 <body>
 <div th:replace="/fragments/nav.html :: nav"></div>
@@ -20,14 +54,14 @@
     </div>
     <hr class="my-4">
     <div>
-        <table class="table">
+        <table class="table table-hover" style="text-align: center;">
             <thead>
             <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-                <th>조회수</th>
+                <th style="width: 8.33%">번호</th>
+                <th style="width: 25%">제목</th>
+                <th style="width: 16.66%">작성자</th>
+                <th style="width: 25%">작성일</th>
+                <th style="width: 16.66%">조회수</th>
             </tr>
             </thead>
             <tbody>
@@ -43,6 +77,25 @@
             </tbody>
         </table>
     </div>
+    <!-- pagination{s} -->
+    <div id="paginationBox" >
+        <ul class="pagination justify-content-center">
+            <li th:if="${pagination.prev}" class="page-item"><a class="page-link" href="#" onClick=""
+                                                                th:onclick="|fn_prev(${pagination.page}, ${pagination.range}, ${pagination.rangeSize})|"
+                                                                th:text="Previous">Previous</a>
+            </li>
+            <li th:each="num : ${#numbers.sequence(pagination.startPage,pagination.endPage)}" class=""
+                th:class="|page-item ${pagination.page == num ? 'active' : ''}|"><a th:text="${num}" class="page-link"
+                                                                                    href="#"
+                                                                                    th:onclick="|fn_pagination(${num}, ${pagination.range})|"
+                                                                                    onClick=""> 번호 </a></li>
+
+            <li th:if="${pagination.next}" class="page-item"><a class="page-link" href="#" onClick=""
+                                                                th:onclick="|fn_next(${pagination.range}, ${pagination.range}, ${pagination.rangeSize})|"
+                                                                th:text="Next">Next</a></li>
+        </ul>
+    </div>
+    <!-- pagination{e} -->
 </div> <!-- /container -->
 </body>
 </html>

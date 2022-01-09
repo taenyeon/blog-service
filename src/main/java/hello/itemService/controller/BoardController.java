@@ -1,6 +1,7 @@
 package hello.itemService.controller;
 
 import hello.itemService.domain.Board;
+import hello.itemService.domain.Pagination;
 import hello.itemService.domain.Reply;
 import hello.itemService.service.BoardService;
 import hello.itemService.service.ajax.ReplyServiceAjax;
@@ -33,9 +34,15 @@ public class BoardController {
     }
 
     @GetMapping
-    public String boards(Model model) {
-        List<Board> boards = boardService.getBoards();
+    public String boards(Model model,
+                         @RequestParam(required = false, defaultValue = "1")int page,
+                         @RequestParam(required = false, defaultValue = "1")int range) {
+        int listCnt = boardService.getBoardListCnt();
+        Pagination pagination = new Pagination();
+        pagination.pageInfo(page,range,listCnt);
+        List<Board> boards = boardService.getBoards(pagination);
         model.addAttribute("boards", boards);
+        model.addAttribute("pagination", pagination);
         return "/boards/boards";
     }
 

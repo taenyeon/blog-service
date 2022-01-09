@@ -154,8 +154,7 @@
     </div>
     <pre th:text="${board.content}"></pre>
     <div>
-    <button type="button" class="btn btn-primary float-right" id="menu" name="menu">목록</button>
-    <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
+    <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
             id="mod" name="mod"
             type="button">수정
     </button>
@@ -185,6 +184,8 @@
             </div>
         </div>
     </div>
+    <br>
+    <button type="button" class="w-100 btn btn-secondary btn-sm" id="menu" name="menu">목록</button>
 </div> <!-- /container -->
 </body>
 </html>

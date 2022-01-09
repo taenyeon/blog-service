@@ -2,6 +2,7 @@ package hello.itemService.service;
 
 import hello.itemService.domain.Board;
 import hello.itemService.domain.Files;
+import hello.itemService.domain.Pagination;
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.BoardRepository;
 import hello.itemService.repository.FileRepository;
@@ -34,9 +35,12 @@ public class BoardService {
         this.fileRepository = fileRepository;
         this.replyRepository = replyRepository;
     }
+    public int getBoardListCnt(){
+        return boardRepository.getBoardListCnt();
+    }
 
-    public List<Board> getBoards() {
-        return boardRepository.findAll();
+    public List<Board> getBoards(Pagination pagination) {
+        return boardRepository.findByNum(pagination);
     }
 
     public Board searchBoard(String id) {

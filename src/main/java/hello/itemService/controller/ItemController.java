@@ -18,7 +18,7 @@ public class ItemController {
 //
 //    @GetMapping
 //    public String items(Model model) {
-//        List<Item> items = itemService.findAll();
+//        List<Item> items = itemService.findByNum();
 //        model.addAttribute("items", items);
 //        return "basic/items";
 //    }
