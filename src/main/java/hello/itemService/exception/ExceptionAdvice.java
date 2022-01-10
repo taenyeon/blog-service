@@ -14,9 +14,6 @@ public class ExceptionAdvice {
                                         HttpServletResponse response,
                                         HttpServletRequest request) throws IOException {
         response.setContentType("text/html; charset=euc-kr");
-//        PrintWriter out = response.getWriter();
-//        out.println("<script>alert('"+e.getMessage()+"'); history.go(-1); </script>");
-//        out.flush();
         return "<script>alert('"+e.getMessage()+"'); history.go(-1); </script>";
 
     }

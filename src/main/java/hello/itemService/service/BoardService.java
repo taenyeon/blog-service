@@ -9,6 +9,7 @@ import hello.itemService.repository.FileRepository;
 import hello.itemService.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class BoardService {
     @Value("${spring.servlet.multipart.location}")
@@ -80,10 +81,7 @@ public class BoardService {
     }
 
     public int deleteBoard(String id) {
-        System.out.println(id);
         List<Files> files = fileRepository.findByBoardId(id);
-        fileRepository.deleteFiles(id);
-        replyRepository.deleteReply(id);
         for (Files file : files) {
             String filePath = file.getFilePath();
             System.out.println("filePath = " + filePath);

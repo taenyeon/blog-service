@@ -1,7 +1,7 @@
 package hello.itemService.controller;
 
 import hello.itemService.domain.Member;
-import hello.itemService.service.ajax.EmailServiceAjax;
+import hello.itemService.service.EmailService;
 import hello.itemService.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,10 +20,10 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final EmailServiceAjax emailServiceAjax;
+    private final EmailService emailServiceAjax;
 
     @Autowired
-    public MemberController(MemberService memberService, EmailServiceAjax emailServiceAjax) {
+    public MemberController(MemberService memberService, EmailService emailServiceAjax) {
         this.memberService = memberService;
         this.emailServiceAjax = emailServiceAjax;
     }

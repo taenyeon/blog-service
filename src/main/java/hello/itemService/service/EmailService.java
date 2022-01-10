@@ -1,17 +1,19 @@
-package hello.itemService.service.ajax;
+package hello.itemService.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
-public class EmailServiceAjax {
+public class EmailService {
 
     @Autowired
     JavaMailSender emailSender;
@@ -72,10 +74,10 @@ public class EmailServiceAjax {
         MimeMessage message = createMessage(to);
         try{//예외처리
             emailSender.send(message);
+        return ePw;
         }catch(MailException es){
             es.printStackTrace();
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("이메일 오류");
         }
-        return ePw;
     }
 }

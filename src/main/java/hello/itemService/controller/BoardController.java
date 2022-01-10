@@ -4,7 +4,7 @@ import hello.itemService.domain.Board;
 import hello.itemService.domain.Pagination;
 import hello.itemService.domain.Reply;
 import hello.itemService.service.BoardService;
-import hello.itemService.service.ajax.ReplyServiceAjax;
+import hello.itemService.service.ReplyService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +26,9 @@ public class BoardController {
     String path;
 
     private final BoardService boardService;
-    private final ReplyServiceAjax replyServiceAjax;
+    private final ReplyService replyServiceAjax;
 
-    public BoardController(BoardService boardService, ReplyServiceAjax replyServiceAjax) {
+    public BoardController(BoardService boardService, ReplyService replyServiceAjax) {
         this.boardService = boardService;
         this.replyServiceAjax = replyServiceAjax;
     }

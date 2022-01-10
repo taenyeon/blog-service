@@ -1,17 +1,19 @@
-package hello.itemService.service.ajax;
+package hello.itemService.service;
 
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
-public class ReplyServiceAjax {
+public class ReplyService {
     private final ReplyRepository replyRepository;
 
-    public ReplyServiceAjax(ReplyRepository replyRepository) {
+    public ReplyService(ReplyRepository replyRepository) {
         this.replyRepository = replyRepository;
     }
 
