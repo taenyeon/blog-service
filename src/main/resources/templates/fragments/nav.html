@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="nav">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark navbar-fixed-top">
         <a class="navbar-brand" href="#" th:href="@{/}">HOME</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -25,10 +25,6 @@
             </span>
             <span class="nav-item" >
                 <a th:if="${session.login == null}" href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
-            </span>
-            <span class="nav-item">
-            <a href="" th:href="@{/members}" class="nav-link">회원목록</a>
-
             </span>
         </div>
     </nav>

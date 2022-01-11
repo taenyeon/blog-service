@@ -112,10 +112,11 @@
 
 
         });
+        // 댓글 입력 취소
             $(document).on("click","[id^=cancel]",function (){
                 location.reload();
             });
-
+            // 게시판으로 돌아감
             $(document).on("click","#menu",function (){
                 location.href = "/boards";
             })
@@ -187,5 +188,6 @@
     <br>
     <button type="button" class="w-100 btn btn-secondary btn-sm" id="menu" name="menu">목록</button>
 </div> <!-- /container -->
+<div th:replace="/fragments/footer.html :: footer"></div>
 </body>
 </html>

@@ -76,7 +76,6 @@ public class EmailService {
             emailSender.send(message);
         return ePw;
         }catch(MailException es){
-            es.printStackTrace();
             throw new IllegalStateException("이메일 오류");
         }
     }

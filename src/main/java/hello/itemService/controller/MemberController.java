@@ -4,6 +4,7 @@ import hello.itemService.domain.Member;
 import hello.itemService.service.EmailService;
 import hello.itemService.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,7 @@ public class MemberController {
     public String memberLogin(@ModelAttribute Member member, HttpServletRequest request) {
         Member loginMember = memberService.loginMember(member).get();
         request.getSession().setAttribute("login", loginMember.getId());
-        request.getSession().setAttribute("img",loginMember.getImg());
+        request.getSession().setAttribute("img", loginMember.getImg());
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
         return "redirect:" + referer;
@@ -76,51 +77,55 @@ public class MemberController {
         String referer = request.getHeader("REFERER");
         return "redirect:" + referer;
     }
+
     @GetMapping("/{id}")
-    public String memberInfo(@PathVariable String id,Model model,HttpServletRequest request){
-        if (request.getSession().getAttribute("login").equals(id)){
-        Optional<Member> member = memberService.findMember(id);
-            model.addAttribute("member",member.get());
-        return "members/memberInfo";
+    public String memberInfo(@PathVariable String id, Model model, HttpServletRequest request) {
+        if (request.getSession().getAttribute("login").equals(id)) {
+            Optional<Member> member = memberService.findMember(id);
+            model.addAttribute("member", member.get());
+            return "members/memberInfo";
         } else {
             throw new IllegalStateException("현재 세션에서 제한된 접근입니다.");
         }
     }
+
     @PostMapping("/{id}")
     public String memberInfoUpdate(@PathVariable String id,
                                    @ModelAttribute Member member,
                                    @RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes,
                                    HttpServletRequest request) throws IOException {
-        if (request.getSession().getAttribute("login").equals(id)){
+        if (request.getSession().getAttribute("login").equals(id)) {
             String imgSet = memberService.updateMember(member, file);
             redirectAttributes.addAttribute("id", id);
-            request.getSession().setAttribute("img",imgSet);
+            request.getSession().setAttribute("img", imgSet);
             return "redirect:/members/{id}";
         } else {
             throw new IllegalStateException("현재 세션에서 제한된 접근입니다.");
         }
     }
+
     // 회원가입 관련 ajax
     @GetMapping("/sendEmail")
     @ResponseBody
-    public String joinSendMail(@RequestParam("email") String email) throws Exception {
-        Optional<Member> member = memberService.findMemberByEmail(email);
-        if (member.isPresent()){
-         return "x";
-        } else {
-        return emailServiceAjax.sendSimpleMessage(email);
-        }
-    }
-    @GetMapping("/checkId")
-    @ResponseBody
-    public String joinCheckId(@RequestParam("id") String id){
-        Optional<Member> member = memberService.findMember(id);
-        if(member.isPresent()){
-            return "x";
-        } else {
-            return "o";
-        }
+    public ResponseEntity<Object> joinSendMail(@RequestParam("email") String email){
+        return memberService.findMemberByEmail(email)
+                .map(isMember -> ResponseEntity.status(300).build())
+                .orElseGet(() -> {
+                    try {
+                        return ResponseEntity.ok(emailServiceAjax.sendSimpleMessage(email));
+                    } catch (Exception e) {
+                        return null;
+                    }
+                });
     }
 
+    @GetMapping("/checkId")
+    @ResponseBody
+    public ResponseEntity<Object> joinCheckId(@RequestParam("id") String id) {
+        return memberService.findMember(id)
+                .map(isMember -> ResponseEntity.status(300).build())
+                .orElse(ResponseEntity.ok("ok"));
+    }
 }
+

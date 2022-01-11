@@ -30,11 +30,12 @@
                     type: "GET",
                     url: "/members/sendEmail?email=" + email,
                     cache: false,
-                    success: function (data) {
-                        code = data;
-                        if (code === 'x') {
+                    statusCode:{
+                        300: function (){
                             alert("이메일이 중복되었습니다. 다른 이메일을 사용해주세요.")
-                        } else {
+                        },
+                        200: function (data) {
+                            code = data;
                             alert("인증번호 발송이 완료되었습니다.\n입력한 이메일에서 인증번호 확인을 해주십시오.");
                             $("#email").attr("readonly", true);
                             $("#code").removeAttr("readonly");
@@ -213,5 +214,6 @@
         </div>
     </form>
 </div> <!-- /container -->
+<div th:replace="/fragments/footer.html :: footer"></div>
 </body>
 </html>
