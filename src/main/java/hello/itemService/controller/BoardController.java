@@ -22,8 +22,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/boards")
 public class BoardController {
-    @Value("${spring.servlet.multipart.location}")
-    String path;
 
     private final BoardService boardService;
     private final ReplyService replyServiceAjax;
@@ -106,44 +104,6 @@ public class BoardController {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
         return "redirect:/boards";
-    }
-
-
-    @GetMapping("/file")
-    public void fileDownload(@RequestParam String filePath,
-                             @RequestParam String fileName,
-                             HttpServletResponse response) {
-        File file = new File(path + "/board/" + filePath);
-        FileInputStream fileInputStream;
-        BufferedInputStream bufferedInputStream = null;
-        ServletOutputStream servletOutputStream = null;
-
-        try {
-            fileInputStream = new FileInputStream(file);
-            bufferedInputStream = new BufferedInputStream(fileInputStream);
-            servletOutputStream = response.getOutputStream();
-            fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-            response.setContentType("application/octet-stream;charset=utf-8");
-            response.addHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
-            response.setContentLength((int) file.length());
-            int read = 0;
-            while ((read = bufferedInputStream.read()) != -1) {
-                servletOutputStream.write(read);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (servletOutputStream != null) {
-                    servletOutputStream.close();
-                }
-                if (bufferedInputStream != null) {
-                    bufferedInputStream.close();
-                }
-            } catch (Exception e) {
-                throw new IllegalStateException("서버 오류로 다운로드 로직을 종료하는데 실패하였습니다.");
-            }
-        }
     }
 
     @PostMapping("/reply/add")

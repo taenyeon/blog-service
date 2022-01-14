@@ -150,7 +150,7 @@
         </tbody>
     </table>
     <div th:each="file : ${board.files}">
-        첨부파일 <a href="" download th:href="@{/boards/file(filePath=${file.filePath},fileName=${file.fileName})}"
+        첨부파일 <a href="" download th:href="@{/files/download(filePath=${file.filePath},fileName=${file.fileName})}"
                 th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
     </div>
     <pre th:text="${board.content}"></pre>
