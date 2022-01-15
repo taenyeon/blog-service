@@ -13,5 +13,4 @@ public interface ReplyRepository {
     int insertReply(Reply reply);
     int deleteReply(@Param("replyId") String replyId);
     int updateReply(Reply reply);
-
 }

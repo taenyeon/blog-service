@@ -48,7 +48,7 @@ public class BoardController {
     public String board(@PathVariable String id, Model model) {
         Board board = boardService.visitBoard(id);
         model.addAttribute(board);
-        return "/boards/board";
+        return "/boards/board2";
     }
 
     @GetMapping("/add")
@@ -106,21 +106,4 @@ public class BoardController {
         return "redirect:/boards";
     }
 
-    @PostMapping("/reply/add")
-    @ResponseBody
-    public String addReply(@ModelAttribute Reply reply) {
-        return replyServiceAjax.addReply(reply);
-    }
-
-    @PostMapping("/reply/modify")
-    @ResponseBody
-    public String modifyReply(@ModelAttribute Reply reply){
-        return replyServiceAjax.modifyReply(reply);
-    }
-
-    @PostMapping("/reply/delete")
-    @ResponseBody
-    public String deleteReply(@RequestParam("replyId") String replyId){
-        return replyServiceAjax.deleteReply(replyId);
-    }
 }

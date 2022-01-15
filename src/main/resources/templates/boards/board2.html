@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragments/header.html :: header"></div>
+    <script th:inline="javascript">
+            let modifyStatus = false;
+            let val = $("#id").text();
+        /*<![CDATA[*/
+        $(function () {
+            getReply();
+            $("#mod").click(function () {
+                location.href = "/boards/" + val + "/modify";
+            });
+            $("#del").click(function () {
+                let result = confirm("게시글을 삭제하시겠습니까?");
+                if (result) {
+                    location.href = "/boards/" + val + "/delete";
+                }
+            });
+            $("#replyCommit").click(function () {
+                let login;
+                let boardId = [[${board.id}]];
+                let replyContent = $("#reply").val();
+
+                if ([[${session.login}]] === null) {
+                    alert("로그인 후 이용해주세요.");
+                } else {
+                    login = [[${session.login}]];
+                    $.ajax({
+                        type: "POST",
+                        url: "/reply/add",
+                        cache: false,
+                        data: {
+                            "replyContent": replyContent,
+                            "replyWriter": login,
+                            "boardId": boardId
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 등록에 실패하였습니다.")
+                            } else {
+                                alert("댓글 등록에 성공하였습니다.")
+                                $("#reply").val('');
+                                getReply();
+                            }
+                        }
+                    })
+                }
+            });
+
+            // 댓글 수정
+            function getReply() {
+                $.ajax({
+                    type: "GET",
+                    url: "/reply/" + [[${board.id}]],
+                    data: {},
+                    dataType: "json",
+                    success: function (data) {
+                        let result = "";
+                        if (data.reply.length === 0) {
+                            result += "<div>댓글이 없습니다.</div>"
+                        } else {
+                            $.each(data.reply, function (key, value) {
+                                let replyId = value.replyId;
+                                let replyWriter = value.replyWriter;
+                                let replyDate = value.replyDate;
+                                let replyContent = value.replyContent;
+                                result += "<div id='reply-" + replyId + "' style='border: 1px solid #cccccc'>";
+                                result += "<b>" + replyWriter + "</b>";
+                                result += "<p>" + replyDate + "</p>";
+                                result += "<pre class='content'>" + replyContent + "</pre>";
+                                if (replyWriter === [[${session.login}]]) {
+                                    result += "<button type='button' class='btn btn-primary btn-sm'  id='modify-" + replyId + "'>수정</button>"
+                                    result += "<button type='button' class='btn btn-primary btn-sm' id='delete-" + replyId + "'>삭제</button>"
+                                }
+                                result += "</div>"
+                            })
+                        }
+                        $("#replyDiv").empty();
+                        $("#replyDiv").html(result);
+                    }
+                });
+            }
+
+            // 댓글 입력 취소
+            $(document).on("click", "[id^=delete]", function () {
+                let id = $(this).attr("id");
+                let str = id.split('-')[1];
+                var result = confirm("댓글을 삭제하시겠습니까?");
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/reply/delete",
+                        cache: false,
+                        data: {
+                            "replyId": str
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 삭제에 실패하였습니다.")
+                            } else {
+                                alert("댓글 삭제에 성공하였습니다.")
+                            }
+                            getReply();
+                        }
+                    })
+                }
+            });
+            $(document).on("click", "[id^=modify]", function () {
+                // 클릭한 버튼의 상위요소들 div 중, 가장 가까운 div의 id 값(댓글 번호) 가져옴.
+                let id = $(this).closest("div").attr("id");
+                // '-'를 기준으로 잘라 뒤에 있는 댓글의 번호를 가져옴.
+                let str = id.split('-')[1];
+                alert(str);
+                // 현재 값을 가져오는 작업이 안되서 일단 보류
+                if (modifyStatus) {
+                    let content = $("#getModifyContent").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/reply/modify",
+                        cache: false,
+                        data: {
+                            "replyId": str,
+                            "replyContent": content
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 수정에 실패하였습니다.")
+                            } else {
+                                modifyStatus = false;
+                                alert("댓글 수정에 성공하였습니다.")
+                            }
+                            getReply();
+                        }
+                    })
+                } else {
+                    // 해당 댓글 번호의 div 에서 하위 요소인 content를 가져옴
+                    let content = $('#' + id).children(".content");
+                    // content 내용을 가져와 텍스트 바꿈.
+                    let contentVal = content.text();
+                    // pre 태그의  content를 textatrea로 변경하여 텍스트를 추가할 수 있도록 함.
+                    content.replaceWith('<textarea id="getModifyContent"/>');
+                    $("#modifyContent").val(contentVal);
+                    $('#delete-' + str).replaceWith('<button type="button" value="취소" id="cancel-' + str + '">취소</button>');
+
+                    modifyStatus = true;
+                }
+            });
+            $(document).on("click", "[id^=cancel]", function () {
+                getReply();
+            });
+
+            // 게시판으로 돌아감
+            $(document).on("click", "#menu", function () {
+                location.href = "/boards";
+            })
+        });
+        /*]]>*/
+    </script>
+</head>
+<body>
+<div th:replace="/fragments/nav.html :: nav"></div>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>게시판</h2>
+    </div>
+        <button type="button" class="btn btn-primary btn-sm" id="replyView">댓글보기</button>
+    <table class="table table-horizontal table-bordered">
+
+        <thead class="thead-strong">
+        <tr>
+            <th>게시글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>최종수정일</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <tr>
+            <td id="id" th:text="${board.id}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.writer}"></td>
+            <td th:text="${board.date}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+    <div th:each="file : ${board.files}">
+        첨부파일 <a href="" download th:href="@{/files/download(filePath=${file.filePath},fileName=${file.fileName})}"
+                th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
+    </div>
+    <pre th:text="${board.content}"></pre>
+    <div>
+    <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
+            id="mod" name="mod"
+            type="button">수정
+    </button>
+    <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
+            id="del" name="del"
+            type="button">삭제
+    </button>
+    </div>
+    <br><br><br>
+    <div>
+        <form action="">
+            <b>댓글 작성하기</b>
+            <textarea id="reply" placeholder="댓글을 입력해주세요." style="width: 100%"></textarea>
+            <button type="button" class="btn btn-primary btn-sm" id="replyCommit">쓰기</button>
+        </form>
+        <strong>댓글</strong>
+    <div id="replyDiv">
+
+    </div>
+    </div>
+    <br>
+    <button type="button" class="w-100 btn btn-secondary btn-sm" id="menu" name="menu">목록</button>
+</div> <!-- /container -->
+<div th:replace="/fragments/footer.html :: footer"></div>
+</body>
+</html>

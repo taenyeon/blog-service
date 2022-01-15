@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
@@ -15,6 +16,9 @@ public class ReplyService {
 
     public ReplyService(ReplyRepository replyRepository) {
         this.replyRepository = replyRepository;
+    }
+    public List<Reply> findById(String boardId){
+        return replyRepository.findByBoardId(boardId);
     }
 
     public String addReply(Reply reply){
