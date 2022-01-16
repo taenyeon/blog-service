@@ -24,11 +24,9 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final ReplyService replyServiceAjax;
 
-    public BoardController(BoardService boardService, ReplyService replyServiceAjax) {
+    public BoardController(BoardService boardService) {
         this.boardService = boardService;
-        this.replyServiceAjax = replyServiceAjax;
     }
 
     @GetMapping

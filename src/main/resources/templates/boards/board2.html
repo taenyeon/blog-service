@@ -3,8 +3,9 @@
 <head>
     <div th:replace="/fragments/header.html :: header"></div>
     <script th:inline="javascript">
-            let modifyStatus = false;
-            let val = $("#id").text();
+        let modifyStatus = false;
+        let addStatus = false;
+        let val = $("#id").text();
         /*<![CDATA[*/
         $(function () {
             getReply();
@@ -65,11 +66,13 @@
                                 let replyWriter = value.replyWriter;
                                 let replyDate = value.replyDate;
                                 let replyContent = value.replyContent;
-                                result += "<div id='reply-" + replyId + "' style='border: 1px solid #cccccc'>";
+                                let replyDepth = value.replyDepth;
+                                result += "<div id='reply-" + replyId + "' style='border: 1px solid #cccccc; margin-left:" + replyDepth * 20 + "px'>";
                                 result += "<b>" + replyWriter + "</b>";
                                 result += "<p>" + replyDate + "</p>";
                                 result += "<pre class='content'>" + replyContent + "</pre>";
                                 if (replyWriter === [[${session.login}]]) {
+                                    result += "<button type='button' class='btn btn-primary btn-sm'  id='add-" + replyId + "'>대댓글</button>"
                                     result += "<button type='button' class='btn btn-primary btn-sm'  id='modify-" + replyId + "'>수정</button>"
                                     result += "<button type='button' class='btn btn-primary btn-sm' id='delete-" + replyId + "'>삭제</button>"
                                 }
@@ -146,6 +149,55 @@
                     modifyStatus = true;
                 }
             });
+
+            $(document).on("click", "[id^=add]", function () {
+                // 클릭한 버튼의 상위요소들 div 중, 가장 가까운 div의 id 값(댓글 번호) 가져옴.
+                let id = $(this).closest("div").attr("id");
+                // '-'를 기준으로 잘라 뒤에 있는 댓글의 번호를 가져옴.
+                let str = id.split('-')[1];
+                if (!addStatus) {
+                    let result = '';
+                    result += "<textarea id='child-" + str + "' placeholder='댓글을 입력해주세요.' style='width: 100%'></textarea>";
+                    result += "<button type='button' class='btn btn-primary btn-sm' id='childCommit-" + str + "'>쓰기</button>";
+                    result += "<button type='button' value='취소' id='cancel-" + str + "'>취소</button>"
+                    // 해당 댓글 번호의 div 에서 하위 요소인 content를 가져옴
+                    $('#' + id).append(result);
+                    addStatus = true;
+                }
+            });
+
+            $(document).on("click", "[id^=childCommit]", function () {
+                let id = $(this).closest("div").attr("id");
+                // '-'를 기준으로 잘라 뒤에 있는 댓글의 번호를 가져옴.
+                let str = id.split('-')[1];
+                // textarea에 저장된 본문 값 가져옴.
+                let replyContent = $("#child-" + str).val();
+                // 로그인 아이디 가져옴.
+                let login = [[${session.login}]];
+                // 현재 게시글의 번호 가져옴.
+                let boardId = [[${board.id}]];
+                    $.ajax({
+                        type: "POST",
+                        url: "/reply/add",
+                        cache: false,
+                        data: {
+                            "replyContent": replyContent,
+                            "replyWriter": login,
+                            "boardId": boardId,
+                            "replyParentId": str,
+                        },
+                        success: function (data) {
+                            if (data === "x") {
+                                alert("댓글 등록에 실패하였습니다.")
+                            } else {
+                                alert("댓글 등록에 성공하였습니다.")
+                                addStatus=false;
+                            }
+                            getReply();
+                        }
+                    })
+            })
+
             $(document).on("click", "[id^=cancel]", function () {
                 getReply();
             });
@@ -164,7 +216,7 @@
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
-        <button type="button" class="btn btn-primary btn-sm" id="replyView">댓글보기</button>
+    <button type="button" class="btn btn-primary btn-sm" id="replyView">댓글보기</button>
     <table class="table table-horizontal table-bordered">
 
         <thead class="thead-strong">
@@ -191,14 +243,14 @@
     </div>
     <pre th:text="${board.content}"></pre>
     <div>
-    <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
-            id="mod" name="mod"
-            type="button">수정
-    </button>
-    <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
-            id="del" name="del"
-            type="button">삭제
-    </button>
+        <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
+                id="mod" name="mod"
+                type="button">수정
+        </button>
+        <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
+                id="del" name="del"
+                type="button">삭제
+        </button>
     </div>
     <br><br><br>
     <div>
@@ -208,9 +260,8 @@
             <button type="button" class="btn btn-primary btn-sm" id="replyCommit">쓰기</button>
         </form>
         <strong>댓글</strong>
-    <div id="replyDiv">
-
     </div>
+    <div id="replyDiv">
     </div>
     <br>
     <button type="button" class="w-100 btn btn-secondary btn-sm" id="menu" name="menu">목록</button>

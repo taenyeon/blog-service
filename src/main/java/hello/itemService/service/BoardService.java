@@ -1,7 +1,7 @@
 package hello.itemService.service;
 
 import hello.itemService.domain.Board;
-import hello.itemService.domain.Files;
+import hello.itemService.domain.File;
 import hello.itemService.domain.Pagination;
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.BoardRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +45,7 @@ public class BoardService {
 
     public Board searchBoard(String id) {
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<Files> files = fileRepository.findByBoardId(id);
+        List<File> files = fileRepository.findByBoardId(id);
         Board board = boardWrap.get();
         board.setFiles(files);
         return board;
@@ -55,7 +54,7 @@ public class BoardService {
     public Board visitBoard(String id) {
         boardRepository.hitUp(id);
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<Files> files = fileRepository.findByBoardId(id);
+        List<File> files = fileRepository.findByBoardId(id);
         List<Reply> replies = replyRepository.findByBoardId(id);
         Board board = boardWrap.get();
         board.setFiles(files);
@@ -70,7 +69,7 @@ public class BoardService {
         return board.getId();
     }
 
-    public int createFile(List<Files> files) {
+    public int createFile(List<File> files) {
         return fileRepository.insertFiles(files);
     }
 
@@ -81,28 +80,28 @@ public class BoardService {
     }
 
     public int deleteBoard(String id) {
-        List<Files> files = fileRepository.findByBoardId(id);
-        for (Files file : files) {
+        List<File> files = fileRepository.findByBoardId(id);
+        for (File file : files) {
             String filePath = file.getFilePath();
             System.out.println("filePath = " + filePath);
-            File oldFile = new File(path +"/boards/"+ filePath);
+            java.io.File oldFile = new java.io.File(path +"/boards/"+ filePath);
             oldFile.delete();
         }
         return boardRepository.deleteBoard(id);
     }
 
     public void fileUpload(MultipartFile[] fileList, int id) throws IOException {
-        List<Files> filesList = new ArrayList<>();
+        List<File> filesList = new ArrayList<>();
             if (!fileList[0].isEmpty()) {
         for (MultipartFile file : fileList) {
                 String originalName;
                 String changedName;
-                Files fileDomain = new Files();
+                File fileDomain = new File();
                 originalName = file.getOriginalFilename();
                 LocalDateTime date = LocalDateTime.now();
                 String getDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
                 changedName = getDate + "_" + originalName;
-                File f = new File(path+"/board/"+changedName);
+                java.io.File f = new java.io.File(path+"/board/"+changedName);
                 long size = file.getSize() / 1024; // kb
                 file.transferTo(f);
                 fileDomain.setBoardId(id);

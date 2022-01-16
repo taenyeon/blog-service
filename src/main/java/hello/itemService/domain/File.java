@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Files {
+public class File {
     private String filePath;
     private String fileName;
     private long fileSize;

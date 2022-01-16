@@ -24,6 +24,22 @@ public class ReplyService {
     public String addReply(Reply reply){
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         reply.setReplyDate(now);
+        if (reply.getReplyParentId() == 0){
+            int order = replyRepository.findMaxReplyOrderByBoardId(String.valueOf(reply.getBoardId()))+1;
+            reply.setReplyOrder(order);
+        }
+        else {
+            System.out.println(reply.getReplyParentId());
+            // 부모 댓글 꺼내옴
+            Reply parentReply = replyRepository.findByReplyId(String.valueOf(reply.getReplyParentId()));
+            // 부모 댓글의 부모 번호 저장 (삭제시 동시 삭제 가능)
+            reply.setReplyParentId(parentReply.getReplyId());
+            // 부모 댓글의 깊이 +1 저장 (부모 댓글의 아래에 존재하는 댓글임을 의미)
+            reply.setReplyDepth(parentReply.getReplyDepth()+1);
+            // 부모 댓글의 순서 +1 저장 (자식 댓글이 부모 댓글의 바로 아래에 올 수 있도록 함.)
+            reply.setReplyOrder(parentReply.getReplyOrder()+1);
+            replyRepository.updateReplyOrder(String.valueOf(parentReply.getReplyOrder()));
+        }
         int result = replyRepository.insertReply(reply);
         if (result != 0){
             return "o";
@@ -34,7 +50,7 @@ public class ReplyService {
 
     public String modifyReply(Reply reply){
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        reply.setReplyDate(now);
+        reply.setReplyModifiedDate(now);
         int result = replyRepository.updateReply(reply);
         if (result != 0){
             return "o";

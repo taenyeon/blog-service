@@ -15,12 +15,12 @@
         where BOARD_ID = #{id}
     </delete>
 
-    <select id="findAll" resultType="hello.itemService.domain.Files">
+    <select id="findAll" resultType="hello.itemService.domain.File">
         select *
         from BOARD_FILES
     </select>
 
-    <select id="findByBoardId" resultType="hello.itemService.domain.Files">
+    <select id="findByBoardId" resultType="hello.itemService.domain.File">
         select file_path as filePath, file_name as fileName, file_size as fileSize, board_id as id
         from BOARD_FILES
         where BOARD_ID = #{id}

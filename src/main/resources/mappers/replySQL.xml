@@ -2,18 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.itemService.repository.ReplyRepository">
     <insert id="insertReply">
-        insert into REPLY(reply_id, reply_content, reply_writer, reply_date, board_id)
-        values (REPLY_ID_UP.nextval,#{replyContent},#{replyWriter},#{replyDate},#{boardId})
+        <selectKey keyProperty="replyId" resultType="int" order="BEFORE">
+            select REPLY_ID_UP.nextval from DUAL
+        </selectKey>
+        insert into REPLY(reply_id, reply_content, reply_writer, reply_date, REPLY_MODIFIED_DATE, board_id,
+        REPLY_PARENT_ID, REPLY_DEPTH, REPLY_ORDER)
+        values ( #{replyId}
+        , #{replyContent}
+        , #{replyWriter}
+        , #{replyDate}
+        , #{replyModifiedDate,jdbcType=DATE}
+        , #{boardId}
+        <choose>
+            <when test="replyParentId==0">
+                , #{replyId}
+                , #{replyDepth}
+                , #{replyOrder}
+            </when>
+            <otherwise>
+                , #{replyParentId}
+                , #{replyDepth}
+                , #{replyOrder}
+            </otherwise>
+        </choose>
+        )
     </insert>
+
     <update id="updateReply">
         update REPLY
         set REPLY_CONTENT=#{replyContent},
-            REPLY_DATE = #{replyDate}
+            REPLY_MODIFIED_DATE = #{replyModifiedDate}
         where REPLY_ID = #{replyId}
     </update>
+
+    <update id="updateReplyOrder">
+        update REPLY
+        set REPLY_ORDER=REPLY_ORDER + 1
+        where REPLY_ORDER > #{replyOrder}
+    </update>
+
     <delete id="deleteReply">
         delete REPLY
-        where REPLY_ID = #{replyId}
+        where REPLY_ID
+                  in (select REPLY_ID from REPLY
+                  start with REPLY_ID = #{replyId} connect by nocycle prior reply_id = reply_parent_id)
     </delete>
 
     <select id="findAll" resultType="hello.itemService.domain.Reply">
@@ -21,10 +53,44 @@
         from REPLY
         order by REPLY_ID desc
     </select>
+
     <select id="findByBoardId" resultType="hello.itemService.domain.Reply">
-        select reply_id as replyId, reply_content as replyContent, reply_writer as replyWriter, reply_date as replyDate, board_id as boardId
+        select reply_id            as replyId
+             , reply_content       as replyContent
+             , reply_writer        as replyWriter
+             , reply_date          as replyDate
+             , board_id            as boardId
+             , REPLY_MODIFIED_DATE as replyModifiedDate
+             , REPLY_PARENT_ID     as replyParentId
+             , REPLY_DEPTH         as replyDepth
+             , REPLY_ORDER         as replyOrder
         from REPLY
         where BOARD_ID = #{boardId}
-        order by REPLY_ID desc
+        order by REPLY_ORDER
+    </select>
+
+    <select id="findByReplyId" resultType="hello.itemService.domain.Reply">
+        select reply_id            as replyId
+             , reply_content       as replyContent
+             , reply_writer        as replyWriter
+             , reply_date          as replyDate
+             , board_id            as boardId
+             , REPLY_MODIFIED_DATE as replyModifiedDate
+             , REPLY_PARENT_ID     as replyParentId
+             , REPLY_DEPTH         as replyDepth
+             , REPLY_ORDER         as replyOrder
+        from REPLY
+        where REPLY_ID = #{replyId}
+    </select>
+
+    <select id="findMaxReplyOrderByBoardId" resultType="java.lang.Integer">
+        select NVL(MAX(REPLY_ORDER), 0)
+        from REPLY
+        where BOARD_ID = #{boardId}
+    </select>
+    <select id="findMaxReplyOrderByReplyId" resultType="java.lang.Integer">
+        select NVL(MAX(REPLY_ORDER), 0)
+        from REPLY
+        where REPLY_PARENT_ID = #{replyId}
     </select>
 </mapper>

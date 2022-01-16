@@ -1,6 +1,6 @@
 package hello.itemService.service;
 
-import hello.itemService.domain.Files;
+import hello.itemService.domain.File;
 import hello.itemService.repository.FileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +14,10 @@ public class FileService {
 
     public FileService(FileRepository fileRepository) {this.fileRepository = fileRepository;}
 
-    public List<Files> getFiles(String id){
+    public List<File> getFiles(String id){
         return fileRepository.findByBoardId(id);
     }
-    public int createFiles(List<Files> files){
+    public int createFiles(List<File> files){
         return fileRepository.insertFiles(files);
     }
     public int deleteFiles(String id){

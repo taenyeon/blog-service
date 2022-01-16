@@ -13,4 +13,8 @@ public interface ReplyRepository {
     int insertReply(Reply reply);
     int deleteReply(@Param("replyId") String replyId);
     int updateReply(Reply reply);
+    Reply findByReplyId(@Param("replyId") String replyId);
+    Integer findMaxReplyOrderByBoardId(@Param("boardId") String boardId);
+    int updateReplyOrder(@Param("replyOrder") String replyOrder);
+    Integer findMaxReplyOrderByReplyId(@Param("replyId") String replyId);
 }
