@@ -21,7 +21,11 @@ public class ReplyService {
         return replyRepository.findByBoardId(boardId);
     }
 
-    public String addReply(Reply reply){
+    public List<Reply> findByBoardId(String id){
+        return replyRepository.findByBoardId(id);
+    }
+
+    public int addReply(Reply reply){
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         reply.setReplyDate(now);
         if (reply.getReplyParentId() == 0){
@@ -40,31 +44,17 @@ public class ReplyService {
             reply.setReplyOrder(parentReply.getReplyOrder()+1);
             replyRepository.updateReplyOrder(String.valueOf(parentReply.getReplyOrder()));
         }
-        int result = replyRepository.insertReply(reply);
-        if (result != 0){
-            return "o";
-        } else {
-            return "x";
-        }
+        return replyRepository.insertReply(reply);
     }
 
-    public String modifyReply(Reply reply){
+    public int modifyReply(Reply reply){
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         reply.setReplyModifiedDate(now);
-        int result = replyRepository.updateReply(reply);
-        if (result != 0){
-            return "o";
-        } else {
-            return "x";
-        }
+        return replyRepository.updateReply(reply);
+
     }
 
-    public String deleteReply(String replyId){
-        int result = replyRepository.deleteReply(replyId);
-        if (result != 0){
-            return "o";
-        } else {
-            return "x";
-        }
+    public int deleteReply(String replyId){
+        return replyRepository.deleteReply(replyId);
     }
 }

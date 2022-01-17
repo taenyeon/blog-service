@@ -27,13 +27,13 @@ public class BoardService {
     @Value("${spring.servlet.multipart.location}")
     String path;
     private final BoardRepository boardRepository;
-    private final FileRepository fileRepository;
-    private final ReplyRepository replyRepository;
+    private final FileService fileService;
+    private final ReplyService replyService;
 
-    public BoardService(BoardRepository boardRepository, FileRepository fileRepository, ReplyRepository replyRepository) {
+    public BoardService(BoardRepository boardRepository, FileRepository fileRepository, ReplyRepository replyRepository, FileService fileService, ReplyService replyService) {
         this.boardRepository = boardRepository;
-        this.fileRepository = fileRepository;
-        this.replyRepository = replyRepository;
+        this.fileService = fileService;
+        this.replyService = replyService;
     }
     public int getBoardListCnt(){
         return boardRepository.getBoardListCnt();
@@ -45,7 +45,7 @@ public class BoardService {
 
     public Board searchBoard(String id) {
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<File> files = fileRepository.findByBoardId(id);
+        List<File> files = fileService.findByBoardId(id);
         Board board = boardWrap.get();
         board.setFiles(files);
         return board;
@@ -54,64 +54,33 @@ public class BoardService {
     public Board visitBoard(String id) {
         boardRepository.hitUp(id);
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<File> files = fileRepository.findByBoardId(id);
-        List<Reply> replies = replyRepository.findByBoardId(id);
+        List<File> files = fileService.findByBoardId(id);
+        List<Reply> replies = replyService.findByBoardId(id);
         Board board = boardWrap.get();
         board.setFiles(files);
         board.setReplies(replies);
         return board;
     }
 
-    public int createBoard(Board board) {
+    public int createBoard(Board board,MultipartFile[] fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setDate(now);
         boardRepository.insertBoard(board);
+        fileService.boardFileUpload(fileList,board.getId());
         return board.getId();
     }
 
-    public int createFile(List<File> files) {
-        return fileRepository.insertFiles(files);
-    }
-
-    public int modifyBoard(Board board) {
+    public int modifyBoard(Board board,MultipartFile[] fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setDate(now);
+        fileService.boardFileUpload(fileList,board.getId());
         return boardRepository.updateBoard(board);
     }
 
     public int deleteBoard(String id) {
-        List<File> files = fileRepository.findByBoardId(id);
-        for (File file : files) {
-            String filePath = file.getFilePath();
-            System.out.println("filePath = " + filePath);
-            java.io.File oldFile = new java.io.File(path +"/boards/"+ filePath);
-            oldFile.delete();
-        }
+        List<File> files = fileService.findByBoardId(id);
+            fileService.deleteFilesInServer(files);
         return boardRepository.deleteBoard(id);
     }
 
-    public void fileUpload(MultipartFile[] fileList, int id) throws IOException {
-        List<File> filesList = new ArrayList<>();
-            if (!fileList[0].isEmpty()) {
-        for (MultipartFile file : fileList) {
-                String originalName;
-                String changedName;
-                File fileDomain = new File();
-                originalName = file.getOriginalFilename();
-                LocalDateTime date = LocalDateTime.now();
-                String getDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-                changedName = getDate + "_" + originalName;
-                java.io.File f = new java.io.File(path+"/board/"+changedName);
-                long size = file.getSize() / 1024; // kb
-                file.transferTo(f);
-                fileDomain.setBoardId(id);
-                fileDomain.setFileName(originalName);
-                fileDomain.setFilePath(changedName);
-                System.out.println("changedName = " + changedName);
-                fileDomain.setFileSize(size);
-                filesList.add(fileDomain);
-            }
-            createFile(filesList);
-        }
-    }
 }

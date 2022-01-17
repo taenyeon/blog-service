@@ -125,7 +125,7 @@ public class MemberController {
     public ResponseEntity<Object> joinCheckId(@RequestParam("id") String id) {
         return memberService.findMember(id)
                 .map(isMember -> ResponseEntity.status(300).build())
-                .orElse(ResponseEntity.ok("ok"));
+                .orElse(ResponseEntity.ok().build());
     }
 }
 

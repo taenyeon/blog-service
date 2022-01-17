@@ -3,8 +3,11 @@ package hello.itemService.controller;
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.ReplyRepository;
 import hello.itemService.service.ReplyService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +30,40 @@ public class ReplyController {
 
     @PostMapping("/add")
     @ResponseBody
-    public String addReply(@ModelAttribute Reply reply) {
-        return replyService.addReply(reply);
+    public ResponseEntity<Object> addReply(@ModelAttribute Reply reply, HttpServletRequest request) {
+        String login = (String)request.getSession().getAttribute("login");
+        if (login != null){
+            reply.setReplyWriter(login);
+        int result = replyService.addReply(reply);
+        if (result>0){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(300).build();
+        }
+        } else {
+            return ResponseEntity.status(400).build();
+        }
     }
 
     @PostMapping("/modify")
     @ResponseBody
-    public String modifyReply(@ModelAttribute Reply reply) {
-        return replyService.modifyReply(reply);
+    public ResponseEntity<Object> modifyReply(@ModelAttribute Reply reply, HttpServletRequest request) {
+        int result = replyService.modifyReply(reply);
+        if (result>0){
+            return ResponseEntity.ok().build();
+        } else {
+        return ResponseEntity.status(300).build();
+        }
     }
 
     @PostMapping("/delete")
     @ResponseBody
-    public String deleteReply(@RequestParam("replyId") String replyId) {
-        return replyService.deleteReply(replyId);
+    public ResponseEntity<Object> deleteReply(@RequestParam("replyId") String replyId) {
+        int result = replyService.deleteReply(replyId);
+        if (result>0){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(300).build();
+        }
     }
 }

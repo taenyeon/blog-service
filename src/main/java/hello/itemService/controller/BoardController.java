@@ -62,10 +62,9 @@ public class BoardController {
 
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
-        int result = boardService.createBoard(board);
-        boardService.fileUpload(fileList, result);
-        if (result != 0) {
-            redirectAttributes.addAttribute("id", result);
+        int id = boardService.createBoard(board,fileList);
+        if (id != 0) {
+            redirectAttributes.addAttribute("id", id);
         } else {
             throw new IllegalStateException("게시글 생성에 실패하였습니다.");
         }
@@ -96,8 +95,7 @@ public class BoardController {
         board.setId(Integer.parseInt(id));
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
-        int result = boardService.modifyBoard(board);
-        boardService.fileUpload(fileList,Integer.parseInt(id) );
+        int result = boardService.modifyBoard(board,fileList);
         if (result == 0) {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
