@@ -79,7 +79,7 @@
     <form action="/members/info" th:action="@{|/members/${session.login}|}" method="post" enctype="multipart/form-data">
         <div style="text-align: center">
             <div style="width: 150px; height: 150px; border-radius: 70%; overflow: hidden; margin: auto; position: relative;">
-                <img style="width: 100%;height: 100%; object-fit: cover;" th:src="@{|/files/member/${member.img}|}"
+                <img style="width: 100%;height: 100%; object-fit: cover;" th:src="@{/file/img(filePath = ${member.img})}"
                      src="사진 경로" id="preview" alt="">
                 <div id="fileLabel" style="width: 200px; height: 100px; opacity: 0.4;background-color: black; position: absolute; top: 120px; left: -22px; font-size: 12px;">
                     사진 변경하기

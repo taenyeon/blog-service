@@ -1,5 +1,6 @@
 package hello.itemService.service;
 
+import hello.itemService.domain.File;
 import hello.itemService.domain.Member;
 import hello.itemService.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +21,13 @@ public class MemberService {
     String path;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, FileService fileService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.fileService = fileService;
     }
 
     // 비밀번호 암호화 메소드
@@ -87,14 +89,9 @@ public class MemberService {
         }
     }
 
-    public String updateMember(Member member, MultipartFile file) throws IOException {
-            String changedName = member.getId()+".jpg";
-        if (!file.isEmpty()) {
-            File f = new File(path + "/member/" + changedName);
-            file.transferTo(f);
-            member.setImg(changedName);
-            System.out.println("OK");
-        }
+    public String updateMember(Member member, MultipartFile[] files) throws IOException {
+        List<File> fileList = fileService.boardFileUpload(files, 0);
+        member.setImg(fileList.get(0).getFilePath());
         int result = memberRepository.update(member);
         if (result != 0) {
             return member.getImg();

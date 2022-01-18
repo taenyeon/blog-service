@@ -4,9 +4,9 @@
 
     <update id="insertFiles" parameterType="java.util.List">
         <foreach collection="list" item="file" separator=" " open="insert all" close="select * from dual">
-        into BOARD_FILES(file_path, file_name, file_size, board_id)
+        into BOARD_FILES(file_path, file_name, file_size, board_id,file_date)
         VALUES
-            (#{file.filePath},#{file.fileName},#{file.fileSize},#{file.boardId})
+            (#{file.filePath},#{file.fileName},#{file.fileSize},#{file.boardId},#{file.fileDate})
         </foreach>
     </update>
 

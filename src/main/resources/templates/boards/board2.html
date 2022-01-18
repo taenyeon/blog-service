@@ -241,7 +241,7 @@
         </tbody>
     </table>
     <div th:each="file : ${board.files}">
-        첨부파일 <a href="" download th:href="@{/files/download(filePath=${file.filePath},fileName=${file.fileName})}"
+        첨부파일 <a href="" download th:href="@{/file/download(filePath=${file.filePath},fileName=${file.fileName})}"
                 th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
     </div>
     <div style="margin-top: 30px; font-size: 25px;">

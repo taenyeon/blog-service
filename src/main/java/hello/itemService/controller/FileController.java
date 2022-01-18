@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import org.springframework.core.io.Resource;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/file")
 public class FileController {
     @Value("${spring.servlet.multipart.location}")
     String path;
@@ -27,7 +27,7 @@ public class FileController {
     public void fileDownload(@RequestParam String filePath,
                              @RequestParam String fileName,
                              HttpServletResponse response) {
-        File file = new File(path + "/board/" + filePath);
+        File file = new File(path + filePath);
         FileInputStream fileInputStream;
         BufferedInputStream bufferedInputStream = null;
         ServletOutputStream servletOutputStream = null;
@@ -59,19 +59,19 @@ public class FileController {
             }
         }
     }
+    // 사진(파일) 불러오기
+    @GetMapping("/img")
+    public ResponseEntity<Resource> getMemberImage(@RequestParam String filePath) {
 
-    @GetMapping("/member/{filePath}")
-    public ResponseEntity<Resource> getMemberImage(@PathVariable String filePath) {
-
-        Resource resource = new FileSystemResource(path + "/member/" + filePath);
+        Resource resource = new FileSystemResource(path + filePath);
         HttpHeaders headers = new HttpHeaders();
         Path file = null;
         try {
-            file = Paths.get(path + "/member/" + filePath);
+            file = Paths.get(path + filePath);
             headers.add("Content-Type", Files.probeContentType(file));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 }

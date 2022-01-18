@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class FileService {
     public FileService(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
     }
+
     // 파일 삭제
     // db의 정보는 게시물 삭제시 동시에 삭제되도록 처리하기때문에 서버측에서 이용하는 파일자체를 삭제하는 로직만으로 구성
     public void deleteFilesInServer(List<File> files) {
@@ -33,34 +36,44 @@ public class FileService {
             oldFile.delete();
         }
     }
+
     // 게시판번호로 파일들 찾기
     public List<File> findByBoardId(String id) {
         return fileRepository.findByBoardId(id);
     }
+
     // 파일 업로드 로직
-    public void boardFileUpload(MultipartFile[] fileList, int id) throws IOException {
+    public List<File> boardFileUpload(MultipartFile[] fileList, int boardId) throws IOException {
         List<File> filesList = new ArrayList<>();
+        // 디렉토리 이름
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        String directory = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (!fileList[0].isEmpty()) {
             for (MultipartFile file : fileList) {
-                String originalName;
-                String changedName;
-                File fileDomain = new File();
-                originalName = file.getOriginalFilename();
-                LocalDateTime date = LocalDateTime.now();
-                String getDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-                changedName = getDate + "_" + originalName;
+                File fileInfo = new File();
+                String originalName = file.getOriginalFilename();
+                // 시분초 포함한 날짜
+                String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+                String changedName = "/" + directory + "/" + date + "_" + originalName;
                 // "/board/" 부분은 차후 LocalDate 형식으로 폴더를 구성할 계획
-                java.io.File f = new java.io.File(path + "/board/" + changedName);
+                java.io.File f = new java.io.File(path + changedName);
+                if (!f.exists()) {
+                    f.mkdirs();
+                }
                 long size = file.getSize() / 1024; // kb
                 file.transferTo(f);
-                fileDomain.setBoardId(id);
-                fileDomain.setFileName(originalName);
-                fileDomain.setFilePath(changedName);
-                System.out.println("changedName = " + changedName);
-                fileDomain.setFileSize(size);
-                filesList.add(fileDomain);
+                fileInfo.setBoardId(boardId);
+                fileInfo.setFileName(originalName);
+                fileInfo.setFilePath(changedName);
+                fileInfo.setFileDate(now);
+                fileInfo.setFileSize(size);
+                filesList.add(fileInfo);
             }
-            fileRepository.insertFiles(filesList);
         }
+            return filesList;
+    }
+
+    public void insertFiles(List<File> fileList) {
+        fileRepository.insertFiles(fileList);
     }
 }

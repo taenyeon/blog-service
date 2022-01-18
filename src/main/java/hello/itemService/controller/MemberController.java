@@ -92,11 +92,11 @@ public class MemberController {
     @PostMapping("/{id}")
     public String memberInfoUpdate(@PathVariable String id,
                                    @ModelAttribute Member member,
-                                   @RequestParam("file") MultipartFile file,
+                                   @RequestParam("file") MultipartFile[] files,
                                    RedirectAttributes redirectAttributes,
                                    HttpServletRequest request) throws IOException {
         if (request.getSession().getAttribute("login").equals(id)) {
-            String imgSet = memberService.updateMember(member, file);
+            String imgSet = memberService.updateMember(member, files);
             redirectAttributes.addAttribute("id", id);
             request.getSession().setAttribute("img", imgSet);
             return "redirect:/members/{id}";
