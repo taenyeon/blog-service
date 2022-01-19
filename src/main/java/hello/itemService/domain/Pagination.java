@@ -18,6 +18,8 @@ public class Pagination {
     private int endPage;
     private boolean prev;
     private boolean next;
+    private String searchType; // 검색 기능 -> 종류
+    private String keyword; // 검색 기능 -> 키워드
 
     public int getStartList() {
         return startList;

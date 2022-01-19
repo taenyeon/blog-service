@@ -57,6 +57,7 @@ public class FileService {
                 String changedName = "/" + directory + "/" + date + "_" + originalName;
                 // "/board/" 부분은 차후 LocalDate 형식으로 폴더를 구성할 계획
                 java.io.File f = new java.io.File(path + changedName);
+                // 파일 폴더가 없을경우, 생성
                 if (!f.exists()) {
                     f.mkdirs();
                 }
