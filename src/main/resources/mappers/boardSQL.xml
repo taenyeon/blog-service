@@ -30,16 +30,24 @@
 
     <select id="findByNum" resultType="hello.itemService.domain.Board"
             parameterType="hello.itemService.domain.Pagination">
-        <![CDATA[
+
         SELECT *
         FROM (
                  SELECT ROW_NUMBER() over (order by id desc ) AS num,
                         b.*
                  FROM board b
-                 WHERE rownum <= #{endList}
+                 WHERE rownum &lt;= #{endList}
+            <if test="searchType=='title' and keyword != null and keyword != '' ">
+                AND b.title like '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType=='content' and keyword != null and keyword != '' ">
+                AND b.CONTENT like '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType=='writer' and keyword != null and keyword != '' ">
+                AND b.writer like '%' || #{keyword} || '%'
+            </if>
              )
-        WHERE #{startList} < num
-        ]]>
+        WHERE #{startList} &lt; num
     </select>
 
     <select id="findById" resultType="hello.itemService.domain.Board">
@@ -51,5 +59,16 @@
     <select id="getBoardListCnt" resultType="int">
         select count(*) as listCnt
         from BOARD
+<if test="keyword != null and keyword != ''" >
+    <if test="searchType=='title'">
+        WHERE BOARD.TITLE LIKE '%' || #{keyword} || '%'
+    </if>
+    <if test="searchType=='content'">
+        WHERE BOARD.CONTENT LIKE '%' || #{keyword} || '%'
+    </if>
+    <if test="searchType=='writer'">
+        WHERE BOARD.WRITER LIKE '%' || #{keyword} || '%'
+    </if>
+</if>
     </select>
 </mapper>

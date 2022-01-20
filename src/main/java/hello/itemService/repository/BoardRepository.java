@@ -16,5 +16,5 @@ public interface BoardRepository {
     int updateBoard(Board board);
     int deleteBoard(@Param("id") String id);
     int hitUp(@Param("id") String id);
-    int getBoardListCnt();
+    int getBoardListCnt(Pagination pagination);
 }

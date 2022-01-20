@@ -27,13 +27,13 @@ public class BoardService {
     private final FileService fileService;
     private final ReplyService replyService;
 
-    public BoardService(BoardRepository boardRepository, FileRepository fileRepository, ReplyRepository replyRepository, FileService fileService, ReplyService replyService) {
+    public BoardService(BoardRepository boardRepository,FileService fileService, ReplyService replyService) {
         this.boardRepository = boardRepository;
         this.fileService = fileService;
         this.replyService = replyService;
     }
-    public int getBoardListCnt(){
-        return boardRepository.getBoardListCnt();
+    public int getBoardListCnt(Pagination pagination){
+        return boardRepository.getBoardListCnt(pagination);
     }
 
     public List<Board> getBoards(Pagination pagination) {

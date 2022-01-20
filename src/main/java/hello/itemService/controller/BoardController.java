@@ -32,9 +32,13 @@ public class BoardController {
     @GetMapping()
     public String boards(Model model,
                          @RequestParam(required = false, defaultValue = "1")int page,
-                         @RequestParam(required = false, defaultValue = "1")int range) {
-        int listCnt = boardService.getBoardListCnt();
+                         @RequestParam(required = false, defaultValue = "1")int range,
+                         @RequestParam(required = false,defaultValue = "title") String searchType,
+                         @RequestParam(required = false,defaultValue = "") String keyword) {
         Pagination pagination = new Pagination();
+        pagination.setSearchType(searchType);
+        pagination.setKeyword(keyword);
+        int listCnt = boardService.getBoardListCnt(pagination);
         pagination.pageInfo(page,range,listCnt);
         List<Board> boards = boardService.getBoards(pagination);
         model.addAttribute("boards", boards);
