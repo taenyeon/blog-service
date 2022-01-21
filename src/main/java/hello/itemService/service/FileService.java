@@ -46,15 +46,15 @@ public class FileService {
     public List<File> boardFileUpload(MultipartFile[] fileList, int boardId) throws IOException {
         List<File> filesList = new ArrayList<>();
         // 디렉토리 이름
-        LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        String directory = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+                String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+        String directory = now.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (!fileList[0].isEmpty()) {
             for (MultipartFile file : fileList) {
                 File fileInfo = new File();
-                String originalName = file.getOriginalFilename();
+                String originalName = date+"_"+ file.getOriginalFilename();
+                String changedName = "/" + directory + "/" + originalName;
                 // 시분초 포함한 날짜
-                String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-                String changedName = "/" + directory + "/" + date + "_" + originalName;
                 // "/board/" 부분은 차후 LocalDate 형식으로 폴더를 구성할 계획
                 java.io.File f = new java.io.File(path + changedName);
                 // 파일 폴더가 없을경우, 생성
@@ -66,7 +66,7 @@ public class FileService {
                 fileInfo.setBoardId(boardId);
                 fileInfo.setFileName(originalName);
                 fileInfo.setFilePath(changedName);
-                fileInfo.setFileDate(now);
+                fileInfo.setFileDate(now.toLocalDate());
                 fileInfo.setFileSize(size);
                 filesList.add(fileInfo);
             }
@@ -78,3 +78,4 @@ public class FileService {
         fileRepository.insertFiles(fileList);
     }
 }
+
