@@ -2,11 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="/fragments/header.html :: header"></div>
+    <style>@media (min-width: 1200px) {
+        .container{
+            max-width: 1200px;
+        }
+
+    }</style>
 </head>
 <body>
-    <div th:replace="/fragments/nav.html :: nav"></div>
+    <div th:replace="/fragments/nav2.html :: nav"></div>
 <div class="container">
-    <div class="py-5 text-center">
+    <div class="py-md-5 text-center">
+        <div class="w-100">
+        <img class="img-fluid" src="/img/mainPhoto.jpg" style="max-height: 300px" alt="">
+        </div>
         <h1>Hello Spring</h1>
         <p>회원 기능</p>
         <div class="row">

@@ -10,4 +10,8 @@ public class HomeController {
     public String home(){
         return "index";
     }
+    @GetMapping("/nav")
+    public String nav(){
+        return "/fragments/nav2";
+    }
 }

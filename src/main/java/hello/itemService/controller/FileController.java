@@ -21,7 +21,7 @@ import org.springframework.core.io.Resource;
 @RequestMapping("/file")
 public class FileController {
     @Value("${spring.servlet.multipart.location}")
-    String path;
+    private String path;
 
     @GetMapping("/download")
     public void fileDownload(@RequestParam String filePath,
