@@ -127,5 +127,11 @@ public class MemberController {
                 .map(isMember -> ResponseEntity.status(300).build())
                 .orElse(ResponseEntity.ok().build());
     }
+    @GetMapping("/test")
+    public String layoutTest(HttpServletRequest request) {
+        String referer = request.getHeader("REFERER");
+        request.getSession().setAttribute("redirectURI", referer);
+        return "members/loginMemberForm2";
+    }
 }
 

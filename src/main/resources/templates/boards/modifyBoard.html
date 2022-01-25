@@ -1,7 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<div layout:fragment="content">
 <head>
-    <div th:replace="/fragments/header.html :: header"></div>
     <script>
         $(function (){
             $("#cancel").click(function (){
@@ -11,8 +13,6 @@
     </script>
 </head>
 <body>
-<div th:replace="/fragments/nav.html :: nav"></div>
-<div class="container">
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
@@ -32,7 +32,6 @@
         <button type="submit" class="btn btn-sm btn-primary">수정</button>
         <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.id}|}" href="/boards"></a>취소</button>
     </form>
-</div> <!-- /container -->
-<div th:replace="/fragments/footer.html :: footer"></div>
 </body>
+</div> <!-- /container -->
 </html>

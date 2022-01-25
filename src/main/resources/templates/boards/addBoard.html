@@ -1,7 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<div layout:fragment="content">
 <head>
-    <div th:replace="/fragments/header.html :: header"></div>
     <script type="text/javascript">
         $(document).ready(function (e){
             $("input[type='file']").change(function(e){
@@ -76,8 +78,6 @@
     </script>
 </head>
 <body>
-<div th:replace="/fragments/nav2.html :: nav2"></div>
-<div class="container">
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
@@ -102,7 +102,6 @@
         <button type="submit" class="btn btn-sm btn-primary">저장</button>
         <button type="button" class="btn btn-sm btn-primary"><a href="/boards"></a>목록</button>
     </form>
-</div> <!-- /container -->
-<div th:replace="/fragments/footer.html :: footer"></div>
 </body>
+</div> <!-- /container -->
 </html>

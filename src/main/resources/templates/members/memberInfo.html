@@ -1,7 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<div layout:fragment="content">
 <head>
-    <div th:replace="/fragments/header.html :: header"></div>
     <script th:inline="javascript">
         // 자바스크립트에서 타임리프 사용하게 해주는 문법
         /*<![CDATA[*/
@@ -71,8 +73,6 @@
     </style>
 </head>
 <body>
-<div th:replace="/fragments/nav.html :: nav"></div>
-<div class="container">
     <div class="py-5 text-center">
         <h2>JOIN</h2>
     </div>
@@ -117,7 +117,6 @@
             </div>
         </div>
     </form>
-</div> <!-- /container -->
-<div th:replace="/fragments/footer.html :: footer"></div>
 </body>
+</div> <!-- /container -->
 </html>

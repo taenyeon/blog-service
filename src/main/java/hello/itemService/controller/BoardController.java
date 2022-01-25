@@ -2,21 +2,15 @@ package hello.itemService.controller;
 
 import hello.itemService.domain.Board;
 import hello.itemService.domain.Pagination;
-import hello.itemService.domain.Reply;
 import hello.itemService.service.BoardService;
-import hello.itemService.service.ReplyService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -50,7 +44,7 @@ public class BoardController {
     public String board(@PathVariable String id, Model model) {
         Board board = boardService.visitBoard(id);
         model.addAttribute(board);
-        return "/boards/board2";
+        return "/boards/board";
     }
 
     @GetMapping("/add")
@@ -104,6 +98,11 @@ public class BoardController {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
         return "redirect:/boards";
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "/boards/addBoard2";
     }
 
 }
