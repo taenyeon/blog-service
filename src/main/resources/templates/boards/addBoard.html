@@ -1,30 +1,107 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<div layout:fragment="content">
 <head>
-    <div th:replace="/fragments/header.html :: header"></div>
+    <script type="text/javascript">
+        $(document).ready(function (e){
+            $("input[type='file']").change(function(e){
+
+                //div 내용 비워주기
+                $('#preview').empty();
+
+                var files = e.target.files;
+                var arr =Array.prototype.slice.call(files);
+
+                //업로드 가능 파일인지 체크
+                for(var i=0;i<files.length;i++){
+                    if(!checkExtension(files[i].name,files[i].size)){
+                        return false;
+                    }
+                }
+
+                preview(arr);
+
+
+            });//file change
+
+            function checkExtension(fileName,fileSize){
+
+                var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+                var maxSize = 20971520;  //20MB
+
+                if(fileSize >= maxSize){
+                    alert('파일 사이즈 초과');
+                    $("input[type='file']").val("");  //파일 초기화
+                    return false;
+                }
+
+                if(regex.test(fileName)){
+                    alert('업로드 불가능한 파일이 있습니다.');
+                    $("input[type='file']").val("");  //파일 초기화
+                    return false;
+                }
+                return true;
+            }
+
+            function preview(arr){
+                arr.forEach(function(f){
+
+                    //파일명이 길면 파일명...으로 처리
+                    var fileName = f.name;
+                    if(fileName.length > 10){
+                        fileName = fileName.substring(0,5)+"...";
+                    }
+
+                    //div에 이미지 추가
+                    var str = '<div style="display: inline-flex; padding: 10px; font-size: 10px"><li style="list-style:none;">';
+                    str += '<span>'+fileName+'</span><br>';
+
+                    //이미지 파일 미리보기
+                    if(f.type.match('image.*')){
+                        var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+                        reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+                            //str += '<button type="button" class="delBtn" value="'+f.name+'" style="background: red">x</button><br>';
+                            str += '<img src="'+e.target.result+'" title="'+f.name+'" width=50 height=50 />';
+                            str += '</li></div>';
+                            $(str).appendTo('#preview');
+                        }
+                        reader.readAsDataURL(f);
+                    }else{
+                        str += '<img src="/img/fileImg.png" title="'+f.name+'" width=50 height=50 />';
+                        $(str).appendTo('#preview');
+                    }
+                });//arr.forEach
+            }
+        });
+    </script>
 </head>
 <body>
-<div th:replace="/fragments/nav.html :: nav"></div>
-<div class="container">
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
-            <form name="form" action="/boards/add" id="form" role="form" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title">제목</label>
-                    <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요" required>
-                </div>
-                <div class="mb-3">
-                    <label for="content">내용</label>
-                    <textarea class="form-control" rows="8" name="content" id="content" placeholder="내용을 입력해 주세요" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="fileList">파일</label>
-                    <input type="file" name="fileList" id="fileList" multiple>
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary">저장</button>
-                <button type="button" class="btn btn-sm btn-primary"><a href="/boards"></a>목록</button>
-            </form>
-</div> <!-- /container -->
+    <form name="form" action="/boards/add" id="form" role="form" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요" required>
+        </div>
+        <div class="mb-3">
+            <label for="content">내용</label>
+            <textarea class="form-control" rows="8" name="content" id="content" placeholder="내용을 입력해 주세요"
+                      required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="fileList">파일</label>
+            <input type="file" name="fileList" id="fileList" multiple>
+        </div>
+        <div>
+            <div id="preview">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">저장</button>
+        <button type="button" class="btn btn-sm btn-primary"><a href="/boards"></a>목록</button>
+    </form>
 </body>
+</div> <!-- /container -->
 </html>

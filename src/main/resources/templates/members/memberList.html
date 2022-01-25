@@ -1,11 +1,8 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="/fragments/header.html :: header"></div>
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
 <body>
-<div th:replace="/fragments/nav.html :: nav"></div>
-<div class="container">
+<div layout:fragment="content">
     <div class="py-5 text-center">
         <h2>MEMBER LIST</h2>
     </div>

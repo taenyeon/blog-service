@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <div th:replace="/fragments/header.html :: header"></div> <!-- header(공통 css,js 넣는 부분) -->
+</head>
+<body>
+<div th:replace="/fragments/nav2.html :: nav"></div> <!-- nav -->
+<div class="container">
+        <!-- content -->
+        <div layout:fragment="content"></div>
+</div> <!-- /container -->
+<div th:replace="/fragments/footer.html :: footer"></div>
+</body>
+</html>

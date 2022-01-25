@@ -1,11 +1,55 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<div layout:fragment="content">
 <head>
-    <div th:replace="/fragments/header.html :: header"></div>
+    <script>
+        //이전 버튼 이벤트
+        function fn_prev(page, range, rangeSize) {
+            page = ((range - 2) * rangeSize) + 1;
+            range = range - 1;
+            let url = "/boards";
+            url += "?page=" + page;
+            url += "&range=" + range;
+
+            location.href = url;
+        }
+
+        //페이지 번호 클릭
+        function fn_pagination(page, range, searchType, keyword) {
+            let url = "/boards";
+            url = url + "?page=" + page;
+            url = url + "&range=" + range;
+            url = url + "&searchType=" + searchType;
+            url = url + "&keyword=" + keyword;
+            location.href = url;
+        }
+
+        //다음 버튼 이벤트
+        function fn_next(page, range, rangeSize) {
+            page = parseInt((range * rangeSize)) + 1;
+            range = parseInt(range) + 1;
+
+            let url = "/boards";
+            url = url + "?page=" + page;
+            url = url + "&range=" + range;
+
+            location.href = url;
+        }
+
+        $(document).on('click', '#search', function (e) {
+            e.preventDefault();
+            let url = "/boards";
+            url = url + "?searchType=" + $('#searchType').val();
+            url = url + "&keyword=" + $('#keyword').val();
+            location.href = url;
+            console.log(url);
+        });
+
+    </script>
 </head>
 <body>
-<div th:replace="/fragments/nav.html :: nav"></div>
-<div class="container">
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
@@ -20,14 +64,14 @@
     </div>
     <hr class="my-4">
     <div>
-        <table class="table">
+        <table class="table table-hover" style="text-align: center;">
             <thead>
             <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-                <th>조회수</th>
+                <th style="width: 8.33%">번호</th>
+                <th style="width: 25%">제목</th>
+                <th style="width: 16.66%">작성자</th>
+                <th style="width: 25%">작성일</th>
+                <th style="width: 16.66%">조회수</th>
             </tr>
             </thead>
             <tbody>
@@ -43,6 +87,44 @@
             </tbody>
         </table>
     </div>
-</div> <!-- /container -->
+    <!-- pagination{s} -->
+    <div id="paginationBox">
+        <ul class="pagination justify-content-center">
+            <li th:if="${pagination.prev}" class="page-item"><a class="page-link" href="#" onClick=""
+                                                                th:onclick="|fn_prev(${pagination.page}, ${pagination.range}, ${pagination.rangeSize})|"
+                                                                th:text="Previous">Previous</a>
+            </li>
+            <li th:each="number : ${#numbers.sequence(pagination.startPage,pagination.endPage)}" class=""
+                th:class="|page-item ${pagination.page == number ? 'active' : ''}|"><a th:text="${number}"
+                                                                                       class="page-link"
+                                                                                       href="#"
+                                                                                       th:href="@{/boards(page=${number},range=${pagination.range},searchType=${pagination.searchType},keyword=${pagination.keyword})}">
+                번호 </a></li>
+
+            <li th:if="${pagination.next}" class="page-item"><a class="page-link" href="#" onClick=""
+                                                                th:onclick="|fn_next(${pagination.page}, ${pagination.range}, ${pagination.rangeSize})|"
+                                                                th:text="Next">Next</a></li>
+        </ul>
+    </div>
+    <!-- pagination -->
+    <!-- search -->
+    <div class="form-group row justify-content-center">
+        <div class="w100" style="padding-right:10px">
+            <select class="form-control form-control-sm" name="searchType" id="searchType">
+                <option value="title">제목</option>
+                <option value="content">본문</option>
+                <option value="writer">작성자</option>
+            </select>
+        </div>
+        <div class="w300" style="padding-right:10px">
+            <input type="text" class="form-control form-control-sm" name="keyword" id="keyword">
+        </div>
+        <div>
+            <button class="btn btn-sm btn-primary" name="search" id="search">검색</button>
+        </div>
+    </div>
+
+
 </body>
+</div> <!-- /container -->
 </html>
