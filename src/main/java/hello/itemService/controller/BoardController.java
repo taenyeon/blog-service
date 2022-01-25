@@ -25,15 +25,15 @@ public class BoardController {
 
     @GetMapping()
     public String boards(Model model,
-                         @RequestParam(required = false, defaultValue = "1")int page,
-                         @RequestParam(required = false, defaultValue = "1")int range,
-                         @RequestParam(required = false,defaultValue = "title") String searchType,
-                         @RequestParam(required = false,defaultValue = "") String keyword) {
+                         @RequestParam(required = false, defaultValue = "1") int page,
+                         @RequestParam(required = false, defaultValue = "1") int range,
+                         @RequestParam(required = false, defaultValue = "title") String searchType,
+                         @RequestParam(required = false, defaultValue = "") String keyword) {
         Pagination pagination = new Pagination();
         pagination.setSearchType(searchType);
         pagination.setKeyword(keyword);
         int listCnt = boardService.getBoardListCnt(pagination);
-        pagination.pageInfo(page,range,listCnt);
+        pagination.pageInfo(page, range, listCnt);
         List<Board> boards = boardService.getBoards(pagination);
         model.addAttribute("boards", boards);
         model.addAttribute("pagination", pagination);
@@ -54,13 +54,13 @@ public class BoardController {
 
     @PostMapping("/add")
     public String addBoard(@ModelAttribute Board board,
-                           @RequestParam("fileList") MultipartFile[] fileList,
+                           @RequestParam("fileList") List<MultipartFile> fileList,
                            RedirectAttributes redirectAttributes,
                            HttpSession session) throws IOException {
 
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
-        int id = boardService.createBoard(board,fileList);
+        int id = boardService.createBoard(board, fileList);
         if (id != 0) {
             redirectAttributes.addAttribute("id", id);
         } else {
@@ -87,13 +87,13 @@ public class BoardController {
 
     @PostMapping("/{id}/modify")
     public String modifyBoard(@PathVariable String id,
-                              @RequestParam("fileList") MultipartFile[] fileList,
+                              @RequestParam("fileList") List<MultipartFile> fileList,
                               HttpSession session,
                               @ModelAttribute Board board) throws IOException {
         board.setId(Integer.parseInt(id));
         String login = (String) session.getAttribute("login");
         board.setWriter(login);
-        int result = boardService.modifyBoard(board,fileList);
+        int result = boardService.modifyBoard(board, fileList);
         if (result == 0) {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
@@ -101,7 +101,7 @@ public class BoardController {
     }
 
     @GetMapping("/test")
-    public String test(){
+    public String test() {
         return "/boards/addBoard2";
     }
 

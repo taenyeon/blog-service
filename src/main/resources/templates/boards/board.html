@@ -244,9 +244,9 @@
         첨부파일 <a href="" download th:href="@{/file/download(filePath=${file.filePath},fileName=${file.fileName})}"
                 th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
     </div>
-    <div style="margin-top: 30px; font-size: 25px;">
-        <b>본문</b>
-        <pre style="font-size: 18px" th:text="${board.content}"></pre>
+    <div id="content" style="margin-top: 30px; font-size: 25px;">
+        <br>
+        <div th:utext="${board.content}"></div>
     </div>
     <div>
         <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"

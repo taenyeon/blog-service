@@ -43,13 +43,13 @@ public class FileService {
     }
 
     // 파일 업로드 로직
-    public List<File> boardFileUpload(MultipartFile[] fileList, int boardId) throws IOException {
+    public List<File> boardFileUpload(List<MultipartFile> fileList, int boardId) throws IOException {
         List<File> filesList = new ArrayList<>();
         // 디렉토리 이름
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
                 String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
         String directory = now.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        if (!fileList[0].isEmpty()) {
+        if (!fileList.get(0).isEmpty()) {
             for (MultipartFile file : fileList) {
                 File fileInfo = new File();
                 String originalName = date+"_"+ file.getOriginalFilename();
@@ -74,6 +74,7 @@ public class FileService {
             return filesList;
     }
 
+    // 파일 업로드
     public void insertFiles(List<File> fileList) {
         fileRepository.insertFiles(fileList);
     }

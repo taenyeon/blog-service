@@ -89,7 +89,7 @@ public class MemberService {
         }
     }
 
-    public String updateMember(Member member, MultipartFile[] files) throws IOException {
+    public String updateMember(Member member, List<MultipartFile> files) throws IOException {
         List<File> fileList = fileService.boardFileUpload(files, 0);
         member.setImg(fileList.get(0).getFilePath());
         int result = memberRepository.update(member);

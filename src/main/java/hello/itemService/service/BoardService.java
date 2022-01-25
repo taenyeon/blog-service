@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
@@ -59,16 +61,18 @@ public class BoardService {
         return board;
     }
 
-    public int createBoard(Board board,MultipartFile[] fileList) throws IOException {
+    public int createBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setDate(now);
         boardRepository.insertBoard(board);
+        if (!fileList.get(0).isEmpty()){
         List<File> files = fileService.boardFileUpload(fileList, board.getId());
         fileService.insertFiles(files);
+        }
         return board.getId();
     }
 
-    public int modifyBoard(Board board,MultipartFile[] fileList) throws IOException {
+    public int modifyBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setDate(now);
         fileService.boardFileUpload(fileList,board.getId());

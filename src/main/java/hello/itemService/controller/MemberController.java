@@ -92,7 +92,7 @@ public class MemberController {
     @PostMapping("/{id}")
     public String memberInfoUpdate(@PathVariable String id,
                                    @ModelAttribute Member member,
-                                   @RequestParam("file") MultipartFile[] files,
+                                   @RequestParam("file") List<MultipartFile> files,
                                    RedirectAttributes redirectAttributes,
                                    HttpServletRequest request) throws IOException {
         if (request.getSession().getAttribute("login").equals(id)) {
@@ -126,12 +126,6 @@ public class MemberController {
         return memberService.findMember(id)
                 .map(isMember -> ResponseEntity.status(300).build())
                 .orElse(ResponseEntity.ok().build());
-    }
-    @GetMapping("/test")
-    public String layoutTest(HttpServletRequest request) {
-        String referer = request.getHeader("REFERER");
-        request.getSession().setAttribute("redirectURI", referer);
-        return "members/loginMemberForm2";
     }
 }
 
