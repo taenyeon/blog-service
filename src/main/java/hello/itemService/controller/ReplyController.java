@@ -29,38 +29,35 @@ public class ReplyController {
     }
 
     @PostMapping("/add")
-    @ResponseBody
     public ResponseEntity<Object> addReply(@ModelAttribute Reply reply, HttpServletRequest request) {
-        String login = (String)request.getSession().getAttribute("login");
-        if (login != null){
+        String login = (String) request.getSession().getAttribute("login");
+        if (login != null) {
             reply.setReplyWriter(login);
-        int result = replyService.addReply(reply);
-        if (result>0){
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(300).build();
-        }
+            int result = replyService.addReply(reply);
+            if (result > 0) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(300).build();
+            }
         } else {
             return ResponseEntity.status(400).build();
         }
     }
 
     @PostMapping("/modify")
-    @ResponseBody
     public ResponseEntity<Object> modifyReply(@ModelAttribute Reply reply, HttpServletRequest request) {
         int result = replyService.modifyReply(reply);
-        if (result>0){
+        if (result > 0) {
             return ResponseEntity.ok().build();
         } else {
-        return ResponseEntity.status(300).build();
+            return ResponseEntity.status(300).build();
         }
     }
 
     @PostMapping("/delete")
-    @ResponseBody
     public ResponseEntity<Object> deleteReply(@RequestParam("replyId") String replyId) {
         int result = replyService.deleteReply(replyId);
-        if (result>0){
+        if (result > 0) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(300).build();

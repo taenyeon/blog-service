@@ -1,6 +1,6 @@
 package hello.itemService.service;
 
-import hello.itemService.domain.File;
+import hello.itemService.domain.FileInfo;
 import hello.itemService.domain.Member;
 import hello.itemService.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +90,8 @@ public class MemberService {
     }
 
     public String updateMember(Member member, List<MultipartFile> files) throws IOException {
-        List<File> fileList = fileService.boardFileUpload(files, 0);
-        member.setImg(fileList.get(0).getFilePath());
+        List<FileInfo> fileInfoList = fileService.boardFileUpload(files, 0);
+        member.setImg(fileInfoList.get(0).getFilePath());
         int result = memberRepository.update(member);
         if (result != 0) {
             return member.getImg();

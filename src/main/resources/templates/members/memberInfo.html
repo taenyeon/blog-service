@@ -12,7 +12,7 @@
                 if (checkImg(this.files[0].name)) {
                     setImageFromFile(this, '#preview');
                 } else {
-                    let img = '/files/member/[[${member.img}]]';
+                    let img = '/file/member/[[${member.img}]]';
                     alert("이미지 형식의 파일을 선택하십시오");
                     $('#file').val("");
                     $("#preview").attr('src', img);

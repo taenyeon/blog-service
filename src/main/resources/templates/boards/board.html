@@ -215,6 +215,12 @@
         });
         /*]]>*/
     </script>
+    <style>
+        #content img{
+            width: auto;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
     <div class="py-5 text-center">
@@ -240,14 +246,12 @@
         </tr>
         </tbody>
     </table>
-    <div th:each="file : ${board.files}">
-        첨부파일 <a href="" download th:href="@{/file/download(filePath=${file.filePath},fileName=${file.fileName})}"
-                th:text="${file.getFileName()+'   '+file.getFileSize()+'KB'}"></a>
+    <div th:each="fileInfo : ${board.fileInfos}">
+        첨부파일 <a href="" download th:href="@{/file/download(filePath=${fileInfo.filePath},fileName=${fileInfo.fileName})}"
+                th:text="${fileInfo.getFileName()+'   '+fileInfo.getFileSize()+'KB'}"></a>
     </div>
-    <div id="content" style="margin-top: 30px; font-size: 25px;">
         <br>
-        <div th:utext="${board.content}"></div>
-    </div>
+        <div id="content" th:utext="${board.content}"></div>
     <div>
         <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
                 id="mod" name="mod"

@@ -24,6 +24,6 @@ public class Board {
 
     private int hit;
 
-    private List<File> files;
+    private List<FileInfo> fileInfos;
     private List<Reply> replies;
 }

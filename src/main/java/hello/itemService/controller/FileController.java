@@ -1,9 +1,12 @@
 package hello.itemService.controller;
 
+import hello.itemService.domain.FileInfo;
+import hello.itemService.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +17,22 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/file")
 public class FileController {
     @Value("${spring.servlet.multipart.location}")
     private String path;
+    private final FileService fileService;
+
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     @GetMapping("/download")
     public void fileDownload(@RequestParam String filePath,
@@ -73,5 +84,24 @@ public class FileController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "img/dropUpload",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> dropUpload(@RequestParam List<MultipartFile> upload){
+        List<FileInfo> fileInfos = null;
+        HashMap<String,Object> map = new HashMap<>();
+        try {
+            fileInfos = fileService.boardFileUpload(upload, 0);
+        for (FileInfo fileInfo : fileInfos){
+            map.put("uploaded",1);
+            map.put("url","/file/img?filePath="+ fileInfo.getFilePath());
+            map.put("fileName", fileInfo.getFileName());
+        }
+        } catch (IOException e) {
+            map.put("uploaded",0);
+            map.put("error","{'message': '"+e.getMessage() + "'}");
+
+        }
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 }

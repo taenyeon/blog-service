@@ -1,6 +1,6 @@
 package hello.itemService.repository;
 
-import hello.itemService.domain.File;
+import hello.itemService.domain.FileInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface FileRepository {
-    List<File> findAll();
-    List<File> findByBoardId(@Param("id") String id);
-    int insertFiles(@Param("list") List<File> files);
+    List<FileInfo> findAll();
+    List<FileInfo> findByBoardId(@Param("id") String id);
+    int insertFiles(@Param("list") List<FileInfo> fileInfos);
     int deleteFiles(@Param("id") String id);
 }

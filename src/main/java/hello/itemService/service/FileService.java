@@ -1,6 +1,6 @@
 package hello.itemService.service;
 
-import hello.itemService.domain.File;
+import hello.itemService.domain.FileInfo;
 import hello.itemService.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,9 +27,9 @@ public class FileService {
 
     // 파일 삭제
     // db의 정보는 게시물 삭제시 동시에 삭제되도록 처리하기때문에 서버측에서 이용하는 파일자체를 삭제하는 로직만으로 구성
-    public void deleteFilesInServer(List<File> files) {
-        for (File file : files) {
-            String filePath = file.getFilePath();
+    public void deleteFilesInServer(List<FileInfo> fileInfos) {
+        for (FileInfo fileInfo : fileInfos) {
+            String filePath = fileInfo.getFilePath();
             System.out.println("filePath = " + filePath);
             java.io.File oldFile = new java.io.File(path + "/boards/" + filePath);
             oldFile.delete();
@@ -38,20 +37,20 @@ public class FileService {
     }
 
     // 게시판번호로 파일들 찾기
-    public List<File> findByBoardId(String id) {
+    public List<FileInfo> findByBoardId(String id) {
         return fileRepository.findByBoardId(id);
     }
 
     // 파일 업로드 로직
-    public List<File> boardFileUpload(List<MultipartFile> fileList, int boardId) throws IOException {
-        List<File> filesList = new ArrayList<>();
+    public List<FileInfo> boardFileUpload(List<MultipartFile> fileList, int boardId) throws IOException {
+        List<FileInfo> filesList = new ArrayList<>();
         // 디렉토리 이름
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
                 String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
         String directory = now.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (!fileList.get(0).isEmpty()) {
             for (MultipartFile file : fileList) {
-                File fileInfo = new File();
+                FileInfo fileInfo = new FileInfo();
                 String originalName = date+"_"+ file.getOriginalFilename();
                 String changedName = "/" + directory + "/" + originalName;
                 // 시분초 포함한 날짜
@@ -75,8 +74,8 @@ public class FileService {
     }
 
     // 파일 업로드
-    public void insertFiles(List<File> fileList) {
-        fileRepository.insertFiles(fileList);
+    public void insertFiles(List<FileInfo> fileInfoList) {
+        fileRepository.insertFiles(fileInfoList);
     }
 }
 

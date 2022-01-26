@@ -49,7 +49,7 @@ public class BoardController {
 
     @GetMapping("/add")
     public String addForm() {
-        return "boards/addBoard";
+        return "/boards/addBoard2";
     }
 
     @PostMapping("/add")
@@ -98,11 +98,6 @@ public class BoardController {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");
         }
         return "redirect:/boards";
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "/boards/addBoard2";
     }
 
 }

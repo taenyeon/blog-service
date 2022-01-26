@@ -3,10 +3,10 @@
 <mapper namespace="hello.itemService.repository.FileRepository">
 
     <update id="insertFiles" parameterType="java.util.List">
-        <foreach collection="list" item="file" separator=" " open="insert all" close="select * from dual">
+        <foreach collection="list" item="fileInfo" separator=" " open="insert all" close="select * from dual">
         into FILE_INFO(file_path, file_name, file_size, board_id,file_date)
         VALUES
-            (#{file.filePath},#{file.fileName},#{file.fileSize},#{file.boardId},#{file.fileDate})
+            (#{fileInfo.filePath},#{fileInfo.fileName},#{fileInfo.fileSize},#{fileInfo.boardId},#{fileInfo.fileDate})
         </foreach>
     </update>
 
@@ -15,12 +15,12 @@
         where BOARD_ID = #{id}
     </delete>
 
-    <select id="findAll" resultType="hello.itemService.domain.File">
+    <select id="findAll" resultType="hello.itemService.domain.FileInfo">
         select *
         from FILE_INFO
     </select>
 
-    <select id="findByBoardId" resultType="hello.itemService.domain.File">
+    <select id="findByBoardId" resultType="hello.itemService.domain.FileInfo">
         select file_path as filePath, file_name as fileName, file_size as fileSize, board_id as id
         from FILE_INFO
         where BOARD_ID = #{id}

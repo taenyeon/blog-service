@@ -1,12 +1,10 @@
 package hello.itemService.service;
 
 import hello.itemService.domain.Board;
-import hello.itemService.domain.File;
+import hello.itemService.domain.FileInfo;
 import hello.itemService.domain.Pagination;
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.BoardRepository;
-import hello.itemService.repository.FileRepository;
-import hello.itemService.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
@@ -44,21 +40,29 @@ public class BoardService {
 
     public Board searchBoard(String id) {
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<File> files = fileService.findByBoardId(id);
+        List<FileInfo> fileInfos = fileService.findByBoardId(id);
+        if (boardWrap.isPresent()){
         Board board = boardWrap.get();
-        board.setFiles(files);
+        board.setFileInfos(fileInfos);
         return board;
+        } else {
+            throw new IllegalStateException("해당 게시물을 찾을 수 없습니다.");
+        }
     }
 
     public Board visitBoard(String id) {
         boardRepository.hitUp(id);
         Optional<Board> boardWrap = boardRepository.findById(id);
-        List<File> files = fileService.findByBoardId(id);
+        List<FileInfo> fileInfos = fileService.findByBoardId(id);
         List<Reply> replies = replyService.findByBoardId(id);
+        if (boardWrap.isPresent()){
         Board board = boardWrap.get();
-        board.setFiles(files);
+        board.setFileInfos(fileInfos);
         board.setReplies(replies);
         return board;
+        } else {
+            throw new IllegalStateException("해당 게시물을 찾을 수 없습니다.");
+        }
     }
 
     public int createBoard(Board board,List<MultipartFile> fileList) throws IOException {
@@ -66,8 +70,8 @@ public class BoardService {
         board.setDate(now);
         boardRepository.insertBoard(board);
         if (!fileList.get(0).isEmpty()){
-        List<File> files = fileService.boardFileUpload(fileList, board.getId());
-        fileService.insertFiles(files);
+        List<FileInfo> fileInfos = fileService.boardFileUpload(fileList, board.getId());
+        fileService.insertFiles(fileInfos);
         }
         return board.getId();
     }
@@ -80,8 +84,8 @@ public class BoardService {
     }
 
     public int deleteBoard(String id) {
-        List<File> files = fileService.findByBoardId(id);
-            fileService.deleteFilesInServer(files);
+        List<FileInfo> fileInfos = fileService.findByBoardId(id);
+            fileService.deleteFilesInServer(fileInfos);
         return boardRepository.deleteBoard(id);
     }
 

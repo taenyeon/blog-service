@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Getter @Setter
-public class File {
+public class FileInfo {
     private String filePath;
     private String fileName;
     private long fileSize;
