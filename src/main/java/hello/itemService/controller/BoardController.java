@@ -49,7 +49,7 @@ public class BoardController {
 
     @GetMapping("/add")
     public String addForm() {
-        return "/boards/addBoard2";
+        return "addBoard";
     }
 
     @PostMapping("/add")

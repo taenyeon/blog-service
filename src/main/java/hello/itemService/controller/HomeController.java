@@ -12,6 +12,6 @@ public class HomeController {
     }
     @GetMapping("/nav")
     public String nav(){
-        return "/fragments/nav2";
+        return "nav";
     }
 }
