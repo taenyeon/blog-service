@@ -238,10 +238,10 @@
         </thead>
         <tbody id="tbody">
         <tr>
-            <td id="boardId" th:text="${board.id}"></td>
-            <td th:text="${board.title}"></td>
-            <td th:text="${board.writer}"></td>
-            <td th:text="${board.date}"></td>
+            <td id="boardId" th:text="${board.getBoardId}"></td>
+            <td th:text="${board.getBoardTitle}"></td>
+            <td th:text="${board.getBoardWriter}"></td>
+            <td th:text="${board.getBoardWriteDate}"></td>
 
         </tr>
         </tbody>
@@ -251,13 +251,13 @@
                 th:text="${fileInfo.getFileName()+'   '+fileInfo.getFileSize()+'KB'}"></a>
     </div>
         <br>
-        <div id="content" th:utext="${board.content}"></div>
+        <div id="content" th:utext="${board.getBoardContent}"></div>
     <div>
-        <button th:if="${session.login == board.writer}" class="btn btn-primary float-right"
+        <button th:if="${session.login == board.getBoardWriter}" class="btn btn-primary float-right"
                 id="mod" name="mod"
                 type="button">수정
         </button>
-        <button th:if="${session.login == board.writer}" class="btn btn-primary float-left"
+        <button th:if="${session.login == board.getBoardWriter}" class="btn btn-primary float-left"
                 id="del" name="del"
                 type="button">삭제
         </button>

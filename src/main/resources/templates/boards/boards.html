@@ -76,13 +76,13 @@
             </thead>
             <tbody>
             <tr th:each="board : ${boards}">
-                <td><a href="item.html" th:href="@{/boards/{id}(id=${board.id})}"
-                       th:text="${board.num}">번호</a></td>
-                <td><a href="item.html" th:href="@{|/boards/${board.id}|}"
-                       th:text="${board.title}">상품명</a></td>
-                <td th:text="${board.writer}">작성자</td>
-                <td th:text="${board.date}">작성일</td>
-                <td th:text="${board.hit}">조회수</td>
+                <td><a href="item.html" th:href="@{/boards/{id}(id=${board.getBoardId})}"
+                       th:text="${board.getBoardNum}">번호</a></td>
+                <td><a href="item.html" th:href="@{|/boards/${board.getBoardId}|}"
+                       th:text="${board.getBoardTitle}">상품명</a></td>
+                <td th:text="${board.getBoardWriter}">작성자</td>
+                <td th:text="${board.getBoardWriteDate}">작성일</td>
+                <td th:text="${board.getBoardHit}">조회수</td>
             </tr>
             </tbody>
         </table>

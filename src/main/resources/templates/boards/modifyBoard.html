@@ -16,21 +16,21 @@
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
-    <form name="form" th:action="@{|/boards/${board.id}/modify|}" action="수정" id="form" role="form" method="post" enctype="multipart/form-data">
+    <form name="form" th:action="@{|/boards/${board.getBoardId}/modify|}" action="수정" id="form" role="form" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="title">제목</label>
-            <input type="text" class="form-control" name="title" id="title" value="제목" th:value="${board.title}" required>
+            <input type="text" class="form-control" name="title" id="title" value="제목" th:value="${board.getBoardTitle}" required>
         </div>
         <div class="mb-3">
             <label for="content">내용</label>
-            <textarea class="form-control" rows="8" name="content" id="content" th:text="${board.content}" required>본문</textarea>
+            <textarea class="form-control" rows="8" name="content" id="content" th:text="${board.getBoardContent}" required>본문</textarea>
         </div>
         <div class="mb-3">
             <label for="fileList">파일</label>
             <input type="file" name="fileList" id="fileList" multiple>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">수정</button>
-        <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.id}|}" href="/boards"></a>취소</button>
+        <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.getBoardId}|}" href="/boards"></a>취소</button>
     </form>
 </body>
 </div> <!-- /container -->

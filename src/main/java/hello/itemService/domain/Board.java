@@ -9,21 +9,29 @@ import java.util.List;
 
 @Getter @Setter
 public class Board {
-    private int id;
+    private int boardId;
 
-    private int num;
+    private int boardNum;
 
-    private String title;
+    private String boardTitle;
 
-    private String content;
+    private String boardContent;
 
-    private String writer;
+    private String boardWriter;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private LocalDate boardWriteDate;
 
-    private int hit;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate boardModifyDate;
+
+    private boolean boardIsDel;
+
+    private int boardHit;
+
+    private String boardMainImg;
+
+    private boolean boardIsPrivate;
 
     private List<FileInfo> fileInfos;
-    private List<Reply> replies;
 }

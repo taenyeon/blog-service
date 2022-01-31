@@ -1,12 +1,11 @@
 package hello.itemService.service;
 
+import hello.itemService.config.DateSet;
 import hello.itemService.domain.Reply;
 import hello.itemService.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Transactional(rollbackFor = Exception.class)
@@ -26,8 +25,7 @@ public class ReplyService {
     }
 
     public int addReply(Reply reply){
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        reply.setReplyDate(now);
+        reply.setReplyWriteDate(DateSet.getNow());
         if (reply.getReplyParentId() == 0){
             int order = replyRepository.findMaxReplyOrderByBoardId(String.valueOf(reply.getBoardId()))+1;
             reply.setReplyOrder(order);
@@ -48,8 +46,7 @@ public class ReplyService {
     }
 
     public int modifyReply(Reply reply){
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        reply.setReplyModifiedDate(now);
+        reply.setReplyModifiedDate(DateSet.getNow());
         return replyRepository.updateReply(reply);
 
     }

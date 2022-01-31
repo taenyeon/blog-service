@@ -6,8 +6,8 @@
         <selectKey keyProperty="id" resultType="int" order="BEFORE">
             select BOARD_ID_UP.nextval from DUAL
         </selectKey>
-        insert into BOARD(id, title, content, writer, "date", hit)
-        values (#{id},#{title},#{content},#{writer},#{date},0)
+        insert into BOARD(board_id, board_title,board_content,board_writer,board_write_date,CATEGORY_ID)
+        values (#{boardId},#{boardTitle},#{boardContent},#{boardWriter},#{boardWriteDate})
     </insert>
 
     <update id="updateBoard">

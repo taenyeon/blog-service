@@ -4,11 +4,10 @@
 
     <update id="update">
         update MEMBER
-        set tel=#{tel},
-            birth=#{birth},
-            adress=#{adress},
-            img=#{img}
-        where id = #{id}
+        set member_tel=#{memberTel},
+            member_birth=#{memberBirth},
+            member_img=#{memberImg}
+        where id = #{memberId}
     </update>
 
     <select id="findAll" resultType="hello.itemService.domain.Member">
@@ -16,32 +15,31 @@
         from member
     </select>
 
-    <select id="findById" resultType="hello.itemService.domain.Member">
+    <select id="findById" resultType="hello.itemService.domain.Member" parameterType="string">
         select *
         from member
-        where id = #{id}
+        where member_id = #{memberId}
     </select>
 
     <insert id="save" parameterType="hello.itemService.domain.Member">
-        insert into member(id, pwd, name, adress, tel, birth, email)
-        values (#{id},
-                #{pwd},
-                #{name},
-                #{adress},
-                #{tel,jdbcType=VARCHAR},
-                #{birth,jdbcType=DATE},
-                #{email})
+        insert into member(member_id, member_pwd, member_name, member_tel, member_birth, member_email)
+        values (#{memberId},
+                #{memberPwd},
+                #{memberName},
+                #{memberTel,jdbcType=VARCHAR},
+                #{memberBirth,jdbcType=DATE},
+                #{memberEmail})
     </insert>
 
     <select id="login" resultType="hello.itemService.domain.Member" parameterType="string">
         select *
         from member
-        where id = #{id}
-          and pwd = #{pwd}
+        where member_id = #{memberId}
+          and member_pwd = #{memberPwd}
     </select>
     <select id="findByEmail" resultType="hello.itemService.domain.Member">
         select *
         from MEMBER
-        where EMAIL = #{email}
+        where member_EMAIL = #{memberEmail}
     </select>
 </mapper>

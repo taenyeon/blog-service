@@ -45,7 +45,7 @@ public class ReplyController {
     }
 
     @PostMapping("/modify")
-    public ResponseEntity<Object> modifyReply(@ModelAttribute Reply reply, HttpServletRequest request) {
+    public ResponseEntity<Object> modifyReply(@ModelAttribute Reply reply) {
         int result = replyService.modifyReply(reply);
         if (result > 0) {
             return ResponseEntity.ok().build();

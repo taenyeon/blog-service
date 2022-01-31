@@ -6,25 +6,31 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Getter @Setter
+@Getter
+@Setter
 public class Member {
 
-    private String id;
+    private String memberId;
 
-    private String pwd;
+    private String memberPwd;
 
-    private String name;
+    private String memberName;
 
-    private String level;
-
-    private String adress;
-
-    private String tel;
+    private String memberTel;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birth;
+    private LocalDate memberBirth;
 
-    private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate memberCreated;
 
-    private String img;
+    private String memberEmail;
+
+    private String memberImg;
+
+    private String memberStatusMessage;
+
+    private boolean memberIsDel;
+
+
 }

@@ -21,10 +21,10 @@ public class Reply {
 
     // 댓글 작성일
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")
-    private LocalDateTime replyDate;
+    private LocalDateTime replyWriteDate;
 
     //댓글 수정일
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime replyModifiedDate;
     // 댓글이 속한 게시글 번호
     private int boardId;
@@ -34,4 +34,6 @@ public class Reply {
     private int replyDepth;
     // 댓글의 순서 -> 게시물을 기준으로 댓글의 순서를 정의 -> 중간에 대댓글이 들어올경우, 그 뒤의 숫자 +1 처리
     private int replyOrder;
+
+    private boolean replyIsDel;
 }

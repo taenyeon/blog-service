@@ -11,9 +11,9 @@ import java.util.Optional;
 @Mapper
 public interface MemberRepository {
     int save(Member member);
-    Optional<Member> findById(String id);
+    Optional<Member> findById(@Param("memberId") String memberId);
     List<Member> findAll();
-    Optional<Member> login(@Param("id") String id,@Param("pwd") String pwd);
+    Optional<Member> login(@Param("memberId") String memberId,@Param("memberPwd") String memberPwd);
     int update(Member member);
-    Optional<Member> findByEmail(@Param("email") String email);
+    Optional<Member> findByEmail(@Param("memberEmail") String memberEmail);
 }

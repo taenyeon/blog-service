@@ -40,9 +40,9 @@ public class BoardController {
         return "/boards/boards";
     }
 
-    @GetMapping("/{id}")
-    public String board(@PathVariable String id, Model model) {
-        Board board = boardService.visitBoard(id);
+    @GetMapping("/{boardId}")
+    public String board(@PathVariable String boardId, Model model) {
+        Board board = boardService.visitBoard(boardId);
         model.addAttribute(board);
         return "/boards/board";
     }
@@ -59,40 +59,40 @@ public class BoardController {
                            HttpSession session) throws IOException {
 
         String login = (String) session.getAttribute("login");
-        board.setWriter(login);
-        int id = boardService.createBoard(board, fileList);
-        if (id != 0) {
-            redirectAttributes.addAttribute("id", id);
+        board.setBoardWriter(login);
+        int boardId = boardService.createBoard(board, fileList);
+        if (boardId != 0) {
+            redirectAttributes.addAttribute("boardId", boardId);
         } else {
             throw new IllegalStateException("게시글 생성에 실패하였습니다.");
         }
-        return "redirect:/boards/{id}";
+        return "redirect:/boards/{boardId}";
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteBoard(@PathVariable String id) {
-        int result = boardService.deleteBoard(id);
+    @GetMapping("/{boardId}/delete")
+    public String deleteBoard(@PathVariable String boardId) {
+        int result = boardService.deleteBoard(boardId);
         if (result == 0) {
             throw new IllegalStateException("게시판 삭제에 실패하였습니다.");
         }
         return "redirect:/boards";
     }
 
-    @GetMapping("/{id}/modify")
-    public String modifyForm(@PathVariable String id, Model model) {
-        Board board = boardService.searchBoard(id);
+    @GetMapping("/{boardId}/modify")
+    public String modifyForm(@PathVariable String boardId, Model model) {
+        Board board = boardService.searchBoard(boardId);
         model.addAttribute(board);
         return "/boards/modifyBoard";
     }
 
-    @PostMapping("/{id}/modify")
-    public String modifyBoard(@PathVariable String id,
+    @PostMapping("/{boardId}/modify")
+    public String modifyBoard(@PathVariable String boardId,
                               @RequestParam("fileList") List<MultipartFile> fileList,
                               HttpSession session,
                               @ModelAttribute Board board) throws IOException {
-        board.setId(Integer.parseInt(id));
+        board.setBoardId(Integer.parseInt(boardId));
         String login = (String) session.getAttribute("login");
-        board.setWriter(login);
+        board.setBoardWriter(login);
         int result = boardService.modifyBoard(board, fileList);
         if (result == 0) {
             throw new IllegalStateException("게시판 수정에 실패하였습니다.");

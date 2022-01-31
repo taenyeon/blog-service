@@ -21,12 +21,12 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final EmailService emailServiceAjax;
+    private final EmailService emailService;
 
     @Autowired
-    public MemberController(MemberService memberService, EmailService emailServiceAjax) {
+    public MemberController(MemberService memberService, EmailService emailService) {
         this.memberService = memberService;
-        this.emailServiceAjax = emailServiceAjax;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -45,7 +45,7 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String memberJoin(@ModelAttribute Member member, HttpServletRequest request) {
+    public String memberJoin(Member member, HttpServletRequest request) {
         memberService.join(member);
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
@@ -61,10 +61,11 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public String memberLogin(@ModelAttribute Member member, HttpServletRequest request) {
+    public String memberLogin(Member member, HttpServletRequest request) {
+        System.out.println("memberId : "+member.getMemberId());
         Member loginMember = memberService.loginMember(member).get();
-        request.getSession().setAttribute("login", loginMember.getId());
-        request.getSession().setAttribute("img", loginMember.getImg());
+        request.getSession().setAttribute("login", loginMember.getMemberId());
+        request.getSession().setAttribute("img", loginMember.getMemberImg());
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
         return "redirect:" + referer;
@@ -78,10 +79,10 @@ public class MemberController {
         return "redirect:" + referer;
     }
 
-    @GetMapping("/{id}")
-    public String memberInfo(@PathVariable String id, Model model, HttpServletRequest request) {
-        if (request.getSession().getAttribute("login").equals(id)) {
-            Optional<Member> member = memberService.findMember(id);
+    @GetMapping("/{memberId}")
+    public String memberInfo(@PathVariable String memberId, Model model, HttpServletRequest request) {
+        if (request.getSession().getAttribute("login").equals(memberId)) {
+            Optional<Member> member = memberService.findMember(memberId);
             model.addAttribute("member", member.get());
             return "members/memberInfo";
         } else {
@@ -89,17 +90,17 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/{id}")
-    public String memberInfoUpdate(@PathVariable String id,
+    @PostMapping("/{memberId}")
+    public String memberInfoUpdate(@PathVariable String memberId,
                                    @ModelAttribute Member member,
                                    @RequestParam("file") List<MultipartFile> files,
                                    RedirectAttributes redirectAttributes,
                                    HttpServletRequest request) throws IOException {
-        if (request.getSession().getAttribute("login").equals(id)) {
+        if (request.getSession().getAttribute("login").equals(memberId)) {
             String imgSet = memberService.updateMember(member, files);
-            redirectAttributes.addAttribute("id", id);
+            redirectAttributes.addAttribute("id", memberId);
             request.getSession().setAttribute("img", imgSet);
-            return "redirect:/members/{id}";
+            return "redirect:/members/{memberId}";
         } else {
             throw new IllegalStateException("현재 세션에서 제한된 접근입니다.");
         }
@@ -108,12 +109,12 @@ public class MemberController {
     // 회원가입 관련 ajax
     @GetMapping("/sendEmail")
     @ResponseBody
-    public ResponseEntity<Object> joinSendMail(@RequestParam("email") String email){
-        return memberService.findMemberByEmail(email)
+    public ResponseEntity<Object> joinSendMail(@RequestParam String memberEmail) {
+        return memberService.findMemberByEmail(memberEmail)
                 .map(isMember -> ResponseEntity.status(300).build())
                 .orElseGet(() -> {
                     try {
-                        return ResponseEntity.ok(emailServiceAjax.sendSimpleMessage(email));
+                        return ResponseEntity.ok(emailService.sendSimpleMessage(memberEmail));
                     } catch (Exception e) {
                         return null;
                     }
@@ -122,8 +123,8 @@ public class MemberController {
 
     @GetMapping("/checkId")
     @ResponseBody
-    public ResponseEntity<Object> joinCheckId(@RequestParam("id") String id) {
-        return memberService.findMember(id)
+    public ResponseEntity<Object> joinCheckId(@RequestParam String memberId) {
+        return memberService.findMember(memberId)
                 .map(isMember -> ResponseEntity.status(300).build())
                 .orElse(ResponseEntity.ok().build());
     }

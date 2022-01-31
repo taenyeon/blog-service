@@ -9,10 +9,10 @@
             let checkEmail = false;
             let checkId = false;
             $("#checkId").click(function () {
-                let id = $("#id").val();
+                let memberId = $("#memberId").val();
                 $.ajax({
                     type: "GET",
-                    url: "/members/checkId?id=" + id,
+                    url: "/members/checkId?memberId=" + memberId,
                     cache: false,
                     statusCode: {
 
@@ -27,11 +27,11 @@
                 })
             })
             $("#getCode").click(function () {
-                let email = $("#email").val();
+                let memberEmail = $("#memberEmail").val();
                 alert("이메일 확인중입니다. 잠시만 기다려주세요.")
                 $.ajax({
                     type: "GET",
-                    url: "/members/sendEmail?email=" + email,
+                    url: "/members/sendEmail?memberEmail=" + memberEmail,
                     cache: false,
                     statusCode: {
                         300: function () {
@@ -40,8 +40,8 @@
                         200: function (data) {
                             code = data;
                             alert("인증번호 발송이 완료되었습니다.\n입력한 이메일에서 인증번호 확인을 해주십시오.");
-                            $("#email").attr("readonly", true);
-                            $("#code").removeAttr("readonly");
+                            $("#memberEmail").attr("readonly", true);
+                            $("#memberCode").removeAttr("readonly");
                         }
                     }
 
@@ -49,23 +49,23 @@
             });
 
             $("#checkCode").click(function () {
-                if ($("#code").val() === code) {
+                if ($("#memberCode").val() === code) {
                     alert("인증코드가 확인되었습니다.");
-                    $("#code").attr("readonly", true);
-                    $("#email").attr("readonly", true);
+                    $("#memberCode").attr("readonly", true);
+                    $("#memberEmail").attr("readonly", true);
                     $("#checkCode").attr("readonly", true);
                     $("#getCode").attr("readonly", true);
                     checkEmail = true;
                 } else {
                     alert("인증코드가 틀립니다. 다시 시도해주세요.")
-                    $("#email").removeAttr("readonly");
-                    $("#code").attr("autofocus", true);
+                    $("#memberEmail").removeAttr("readonly");
+                    $("#memberCode").attr("autofocus", true);
                 }
             });
 
             $("#submit").click(function () {
                 $("#form").submit(function () {
-                    let tel = $('#tel').val();
+                    let memberTel = $('#memberTel').val();
                     if (checkId === false) {
                         alert("아이디 중복 체크를 해주세요.");
                         return false;
@@ -74,8 +74,8 @@
                         alert("이메일 인증을 해주세요.");
                         return false;
                     }
-                    if (tel.length === 13) {
-                        if (tel.substr(0, 3) !== '010') {
+                    if (memberTel.length === 13) {
+                        if (memberTel.substr(0, 3) !== '010') {
                             alert("전화번호를 다시 입력해주세요.")
                             return false;
                         }
@@ -85,14 +85,14 @@
                     }
                 });
             });
-            $('#tel').keyup(function (event) {
-                var _val = this.value.trim();
-                this.value = autoHypenTel(_val);
+            $('#memberTel').keyup(function (event) {
+                let val = this.value.trim();
+                this.value = autoHypenTel(val);
             });
 
             function autoHypenTel(str) {
                 str = str.replace(/[^0-9]/g, '');
-                var tmp = '';
+                let tmp = '';
 
                 if (str.substring(0, 2) === '02') {
                     // 서울 전화번호일 경우 10자리까지만 나타나고 그 이상의 자리수는 자동삭제
@@ -155,49 +155,44 @@
     </div>
     <form action="/members/join" method="post" name="form" id="form">
         <div>
-            <label for="id">ID</label>
-            <input type="text" id="id" name="id" class="form-control"
+            <label for="memberId">ID</label>
+            <input type="text" id="memberId" name="memberId" class="form-control"
                    placeholder="아이디를 입력하세요." required>
             <button type="button" class="w-100 btn btn-primary btn-sm" id="checkId" name="checkId">아이디 중복 확인
             </button>
         </div>
         <div>
-            <label for="pwd">PWD</label>
-            <input type="password" id="pwd" name="pwd" class="form-control"
+            <label for="memberPwd">PWD</label>
+            <input type="password" id="memberPwd" name="memberPwd" class="form-control"
                    placeholder="비밀번호를 입력하세요." required>
         </div>
         <div>
-            <label for="name">NAME</label>
-            <input type="text" id="name" name="name" class="form-control"
+            <label for="memberName">NAME</label>
+            <input type="text" id="memberName" name="memberName" class="form-control"
                    placeholder="이름을 입력하세요." required>
         </div>
         <div>
-            <label for="email">EMAIL</label>
-            <input type="text" id="email" name="email" class="form-control"
+            <label for="memberEmail">EMAIL</label>
+            <input type="text" id="memberEmail" name="memberEmail" class="form-control"
                    placeholder="이메일을 입력하세요." required>
             <button type="button" class="w-100 btn btn-primary btn-sm" id="getCode" name="getCode">이메일 인증하기
             </button>
         </div>
         <div>
-            <label for="code">인증번호</label>
-            <input type="text" id="code" name="code" class="form-control"
+            <label for="memberCode">인증번호</label>
+            <input type="text" id="memberCode" name="memberCode" class="form-control"
                    placeholder="코드를 입력하세요." required readonly>
             <button type="button" class="w-100 btn btn-primary btn-sm" id="checkCode" name="checkCode">인증하기
             </button>
         </div>
         <div>
-            <label for="adress">ADRESS</label>
-            <input type="text" id="adress" name="adress" class="form-control"
-                   placeholder="주소를 입력하세요. (선택사항)">
-        </div>
-        <div>
-            <label for="birth">BIRTH(YYYY/MM/DD)</label>
-            <input type="date" id="birth" name="birth" class="form-control"
+            <label for="memberBirth">BIRTH(YYYY/MM/DD)</label>
+            <input type="date" id="memberBirth" name="memberBirth" class="form-control"
                    value="2000-01-01">
         </div>
         <div>
-            <label for="tel">TEL</label>
-            <input type="tel" id="tel" name="tel" class="form-control"
+            <label for="memberTel">TEL</label>
+            <input type="tel" id="memberTel" name="memberTel" class="form-control"
                    placeholder="'-'를 뺀 번호를 입력해주세요." maxlength="13" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}">
         </div>
         <hr class="my-4">

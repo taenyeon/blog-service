@@ -23,12 +23,10 @@ public class BoardService {
     String path;
     private final BoardRepository boardRepository;
     private final FileService fileService;
-    private final ReplyService replyService;
 
-    public BoardService(BoardRepository boardRepository,FileService fileService, ReplyService replyService) {
+    public BoardService(BoardRepository boardRepository,FileService fileService) {
         this.boardRepository = boardRepository;
         this.fileService = fileService;
-        this.replyService = replyService;
     }
     public int getBoardListCnt(Pagination pagination){
         return boardRepository.getBoardListCnt(pagination);
@@ -38,9 +36,9 @@ public class BoardService {
         return boardRepository.findByNum(pagination);
     }
 
-    public Board searchBoard(String id) {
-        Optional<Board> boardWrap = boardRepository.findById(id);
-        List<FileInfo> fileInfos = fileService.findByBoardId(id);
+    public Board searchBoard(String boardId) {
+        Optional<Board> boardWrap = boardRepository.findById(boardId);
+        List<FileInfo> fileInfos = fileService.findByBoardId(boardId);
         if (boardWrap.isPresent()){
         Board board = boardWrap.get();
         board.setFileInfos(fileInfos);
@@ -50,43 +48,33 @@ public class BoardService {
         }
     }
 
-    public Board visitBoard(String id) {
-        boardRepository.hitUp(id);
-        Optional<Board> boardWrap = boardRepository.findById(id);
-        List<FileInfo> fileInfos = fileService.findByBoardId(id);
-        List<Reply> replies = replyService.findByBoardId(id);
-        if (boardWrap.isPresent()){
-        Board board = boardWrap.get();
-        board.setFileInfos(fileInfos);
-        board.setReplies(replies);
-        return board;
-        } else {
-            throw new IllegalStateException("해당 게시물을 찾을 수 없습니다.");
-        }
+    public Board visitBoard(String boarId) {
+        boardRepository.hitUp(boarId);
+       return searchBoard(boarId);
     }
 
     public int createBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        board.setDate(now);
+        board.setBoardWriteDate(now);
         boardRepository.insertBoard(board);
         if (!fileList.get(0).isEmpty()){
-        List<FileInfo> fileInfos = fileService.boardFileUpload(fileList, board.getId());
+        List<FileInfo> fileInfos = fileService.boardFileUpload(fileList, board.getBoardId());
         fileService.insertFiles(fileInfos);
         }
-        return board.getId();
+        return board.getBoardId();
     }
 
     public int modifyBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        board.setDate(now);
-        fileService.boardFileUpload(fileList,board.getId());
+        board.setBoardWriteDate(now);
+        fileService.boardFileUpload(fileList,board.getBoardId());
         return boardRepository.updateBoard(board);
     }
 
-    public int deleteBoard(String id) {
-        List<FileInfo> fileInfos = fileService.findByBoardId(id);
+    public int deleteBoard(String boarId) {
+        List<FileInfo> fileInfos = fileService.findByBoardId(boarId);
             fileService.deleteFilesInServer(fileInfos);
-        return boardRepository.deleteBoard(id);
+        return boardRepository.deleteBoard(boarId);
     }
 
 }

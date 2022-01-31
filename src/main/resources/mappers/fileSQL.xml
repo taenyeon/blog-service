@@ -6,7 +6,7 @@
         <foreach collection="list" item="fileInfo" separator=" " open="insert all" close="select * from dual">
         into FILE_INFO(file_path, file_name, file_size, board_id,file_date)
         VALUES
-            (#{fileInfo.filePath},#{fileInfo.fileName},#{fileInfo.fileSize},#{fileInfo.boardId},#{fileInfo.fileDate})
+            (#{filePath},#{fileName},#{fileSize},#{boardId},#{fileDate})
         </foreach>
     </update>
 
@@ -21,7 +21,7 @@
     </select>
 
     <select id="findByBoardId" resultType="hello.itemService.domain.FileInfo">
-        select file_path as filePath, file_name as fileName, file_size as fileSize, board_id as id
+        select file_path, file_name, file_size, board_id
         from FILE_INFO
         where BOARD_ID = #{id}
     </select>

@@ -17,8 +17,8 @@
             </thead>
             <tbody>
             <tr th:each="member : ${members}">
-                <td th:text="${member.id}">ID</td>
-                <td th:text="${member.name}">NAME</td>
+                <td th:text="${member.getMemberId}">ID</td>
+                <td th:text="${member.getMemberName}">NAME</td>
             </tr>
             </tbody>
         </table>
