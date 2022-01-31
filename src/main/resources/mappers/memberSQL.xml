@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="hello.itemService.repository.MemberRepository">
+<mapper namespace="hello.blogService.repository.MemberRepository">
 
     <update id="update">
         update MEMBER
         set member_tel=#{memberTel},
             member_birth=#{memberBirth},
             member_img=#{memberImg}
-        where id = #{memberId}
+        where member_id = #{memberId}
     </update>
 
-    <select id="findAll" resultType="hello.itemService.domain.Member">
+    <select id="findAll" resultType="Member">
         select *
         from member
     </select>
 
-    <select id="findById" resultType="hello.itemService.domain.Member" parameterType="string">
+    <select id="findById" resultType="Member" parameterType="string">
         select *
         from member
-        where member_id = #{memberId}
+        where MEMBER_ID = #{memberId}
     </select>
 
-    <insert id="save" parameterType="hello.itemService.domain.Member">
+    <insert id="save" parameterType="Member">
         insert into member(member_id, member_pwd, member_name, member_tel, member_birth, member_email)
         values (#{memberId},
                 #{memberPwd},
@@ -31,13 +31,13 @@
                 #{memberEmail})
     </insert>
 
-    <select id="login" resultType="hello.itemService.domain.Member" parameterType="string">
+    <select id="login" resultType="Member" parameterType="string">
         select *
         from member
         where member_id = #{memberId}
           and member_pwd = #{memberPwd}
     </select>
-    <select id="findByEmail" resultType="hello.itemService.domain.Member">
+    <select id="findByEmail" resultType="Member">
         select *
         from MEMBER
         where member_EMAIL = #{memberEmail}

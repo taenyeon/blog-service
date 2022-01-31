@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<style></style>
+<div th:fragment="nav2">
+    <nav class="navbar navbar-expand-sm bg-transparent"> <!-- 제목 -->
+        <a class="navbar-brand" href="#" th:href="@{/}"
+           style="font-family: 'Bebas Neue', cursive; font-size: 25px; color: black">BLOG PROJECT</a>
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <!-- 리스트 : 부트스트랩은 모바일 우선이라 화면이 작으면 아래로 쌓아서 내려온다 -->
+            <ul class="navbar-nav navbar-dark">
+            </ul> <!-- Search -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a class="nav-link" href="#" th:href="@{/boards}">게시판</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
+                <li class="nav-item"><a class="nav-link disabled" href="#">Link 3</a></li>
+                <li class="nav-item">
+                    <img th:if="${session.login != null}" style="border-radius: 20px; width: 35px; height: 35px"
+                         th:src="@{/file/img(filePath = ${session.img})}" src="" alt="">
+                </li>
+                <li>
+                    <a th:if="${session.login != null}" th:text="${session.login}" class="nav-link"
+                       th:href="@{|/members/${session.login}|}" href="#">아이디</a>
+                </li>
+                <li class="nav-item">
+                    <a th:if="${session.login == null}" href="/members/login" class="nav-link">로그인</a>
+                    <a th:if="${session.login != null}" href="/members/logout" class="nav-link">로그아웃</a>
+                </li>
+                <li class="nav-item">
+                    <a th:if="${session.login == null}" href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+</div>
+</html>

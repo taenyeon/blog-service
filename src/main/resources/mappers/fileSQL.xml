@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="hello.itemService.repository.FileRepository">
+<mapper namespace="hello.blogService.repository.FileRepository">
 
     <update id="insertFiles" parameterType="java.util.List">
         <foreach collection="list" item="fileInfo" separator=" " open="insert all" close="select * from dual">
@@ -15,12 +15,12 @@
         where BOARD_ID = #{id}
     </delete>
 
-    <select id="findAll" resultType="hello.itemService.domain.FileInfo">
+    <select id="findAll" resultType="hello.blogService.domain.FileInfo">
         select *
         from FILE_INFO
     </select>
 
-    <select id="findByBoardId" resultType="hello.itemService.domain.FileInfo">
+    <select id="findByBoardId" resultType="hello.blogService.domain.FileInfo">
         select file_path, file_name, file_size, board_id
         from FILE_INFO
         where BOARD_ID = #{id}
