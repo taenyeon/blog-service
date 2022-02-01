@@ -9,6 +9,7 @@ import java.util.Optional;
 @Mapper
 public interface BlogRepository {
     List<Blog> findAll();
+    List<Blog> findAllByBlogWriter(String login);
     Optional<Blog> findByBlogAdress(String blogAdress);
     int insertBlog(Blog blog);
     int updateBlog(Blog blog);

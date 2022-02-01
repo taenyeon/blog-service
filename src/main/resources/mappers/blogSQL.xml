@@ -6,21 +6,23 @@
                          blog_writer,
                          blog_name,
                          BLOG_IS_TEAM,
-                         BLOG_IS_PRIVATE
-                         )
-        VALUES (#{blogAdress},#{blogWriter},#{blogName},#{blogIsTeam},#{blogIsPrivate})
+                         BLOG_IS_PRIVATE)
+        VALUES (#{blogAdress}, #{blogWriter}, #{blogName}, #{blogIsTeam}, #{blogIsPrivate})
     </insert>
 
     <update id="updateBlog" parameterType="hello.blogService.domain.Blog">
-        update BLOG set BLOG_NAME = #{blogName},
-                        blog_is_private = #{blogIsPrivate},
-                        blog_explanation = #{blogExplanation},
-                        blog_background_img = #{blogBackgroundImg},
-                        blog_main_img = #{blogMainImg}
+        update BLOG
+        set BLOG_NAME           = #{blogName},
+            blog_is_private     = #{blogIsPrivate},
+            blog_explanation    = #{blogExplanation},
+            blog_background_img = #{blogBackgroundImg},
+            blog_main_img       = #{blogMainImg}
         where blog_adress = #{blogAdress};
     </update>
     <delete id="deleteBlog">
-        update BLOG set BLOG_IS_DEL = '1' where BLOG_ADRESS = #{blogAdress}
+        update BLOG
+        set BLOG_IS_DEL = '1'
+        where BLOG_ADRESS = #{blogAdress}
     </delete>
 
     <select id="findAll" resultType="hello.blogService.domain.Blog">
@@ -31,6 +33,11 @@
         select *
         from BLOG
         where BLOG_ADRESS = #{blogAdress}
+    </select>
+    <select id="findAllByBlogWriter" resultType="hello.blogService.domain.Blog">
+        select *
+        from BLOG
+        where BLOG_WRITER = #{login}
     </select>
 
 </mapper>

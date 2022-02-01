@@ -11,6 +11,8 @@ public class Category {
 
     private String categoryName;
 
+    private String blogAdress;
+
     private boolean categoryIsDel;
 
 }

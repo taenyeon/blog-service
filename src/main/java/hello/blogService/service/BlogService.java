@@ -29,4 +29,8 @@ public class BlogService {
         return blogRepository.insertBlog(blog);
     }
 
+    public List<Blog> findByBlogWriter(String login){
+        return blogRepository.findAllByBlogWriter(login);
+    }
+
 }

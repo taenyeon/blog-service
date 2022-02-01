@@ -22,4 +22,12 @@ public class Blog {
     private String blogBackgroundImg;
 
     private String blogMainImg;
+
+    public void setBlogIsPrivate(String blogIsPrivate) {
+        this.blogIsPrivate = (Integer.parseInt(blogIsPrivate) != 0);
+    }
+
+    public void setBlogIsTeam(String blogIsTeam) {
+        this.blogIsTeam = (Integer.parseInt(blogIsTeam) != 0);
+    }
 }
