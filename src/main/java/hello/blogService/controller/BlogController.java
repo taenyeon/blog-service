@@ -2,6 +2,7 @@ package hello.blogService.controller;
 
 import hello.blogService.domain.Blog;
 import hello.blogService.service.BlogService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,18 @@ public class BlogController {
             return "/index";
         } else {
           throw new IllegalStateException("실패");
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/writer")
+    public ResponseEntity<Object> findBlogByWriter(HttpServletRequest request){
+        String login = (String) request.getSession().getAttribute("login");
+        List<Blog> blogs = blogService.findByBlogWriter(login);
+        if (blogs == null) {
+            return ResponseEntity.status(204).build();
+        } else {
+        return ResponseEntity.ok(blogs);
         }
     }
 

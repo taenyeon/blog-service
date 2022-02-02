@@ -62,6 +62,29 @@
                 }
 
             })
+            function getBlog(){
+                let result;
+                $.ajax({
+                    type: "get",
+                    url:"/blogs/writer",
+                    cache: false,
+                    statusCode: {
+                        204 : function (){
+                            result += "<p>아직 블로그를 생성하지 않았습니다.</p>";
+                            result += "<p>블로그를 생성하려면 <a href='/blogs/add'>여기</a>를 클릭하여 주세요.</p>"
+                            $("#myBlog").innerHTML(result);
+                        },
+                        200 : function (data){
+                            $.each(data,function (key,value){
+                                let blogAdress = value.blogAdress;
+                                let blogName = value.blogName;
+                                let blogIsPrivate = value.blogIsPrivate;
+                                result +=
+                            })
+                        }
+                    }
+                })
+            }
         })
         /*]]>*/
     </script>
@@ -74,7 +97,7 @@
 </head>
 <body>
     <div class="py-5 text-center">
-        <h2>JOIN</h2>
+        <h2>INFO</h2>
     </div>
     <form action="/members/info" th:action="@{|/members/${session.login}|}" method="post" enctype="multipart/form-data">
         <div style="text-align: center">
@@ -96,6 +119,29 @@
         <div>
             <label for="memberTel">TEL</label>
             <input type="text" id="memberTel" name="memberTel" class="form-control" th:value="${member.getMemberTel}">
+        </div>
+        <div id="myBlog">
+            <p>My Blog</p>
+            <table class="table table-hover" style="text-align: center;">
+                <thead>
+                <tr>
+                    <th style="width: 8.33%">url</th>
+                    <th style="width: 25%">name</th>
+                    <th style="width: 16.66%">Is Private</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="board : ${boards}">
+                    <td><a href="item.html" th:href="@{/boards/{id}(id=${board.getBoardId})}"
+                           th:text="${board.getBoardNum}">번호</a></td>
+                    <td><a href="item.html" th:href="@{|/boards/${board.getBoardId}|}"
+                           th:text="${board.getBoardTitle}">상품명</a></td>
+                    <td th:text="${board.getBoardWriter}">작성자</td>
+                    <td th:text="${board.getBoardWriteDate}">작성일</td>
+                    <td th:text="${board.getBoardHit}">조회수</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <br><br>
         <button type="button" class="w-100 btn btn-danger" id="delete" name="delete">회원 탈퇴하기</button>

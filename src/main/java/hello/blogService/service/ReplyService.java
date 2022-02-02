@@ -20,9 +20,6 @@ public class ReplyService {
         return replyRepository.findByBoardId(boardId);
     }
 
-    public List<Reply> findByBoardId(String id){
-        return replyRepository.findByBoardId(id);
-    }
 
     public int addReply(Reply reply){
         reply.setReplyWriteDate(DateSet.getNow());

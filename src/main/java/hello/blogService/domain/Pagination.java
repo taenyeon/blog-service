@@ -32,7 +32,6 @@ public class Pagination {
 
         //전체 페이지수
         this.pageCnt = (int) Math.ceil((float)listCnt / listSize);
-        System.out.println(this.pageCnt);
 
         //시작 페이지
         this.startPage = (range - 1) * rangeSize + 1;
