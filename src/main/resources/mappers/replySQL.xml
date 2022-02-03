@@ -5,13 +5,14 @@
         <selectKey keyProperty="replyId" resultType="int" order="BEFORE">
             select REPLY_ID_UP.nextval from DUAL
         </selectKey>
-        insert into REPLY(reply_id, reply_content, reply_writer, reply_date, REPLY_MODIFIED_DATE, board_id,
+        insert into REPLY(reply_id, reply_content, reply_writer_id, reply_write_date,
+        REPLY_MODIfy_DATE, board_id,
         REPLY_PARENT_ID, REPLY_DEPTH, REPLY_ORDER)
         values ( #{replyId}
         , #{replyContent}
-        , #{replyWriter}
-        , #{replyDate}
-        , #{replyModifiedDate,jdbcType=DATE}
+        , #{replyWriterId}
+        , #{replyWriteDate}
+        , #{replyModifyDate,jdbcType=DATE}
         , #{boardId}
         <choose>
             <when test="replyParentId==0">
@@ -44,8 +45,10 @@
     <delete id="deleteReply">
         delete REPLY
         where REPLY_ID
-                  in (select REPLY_ID from REPLY
-                  start with REPLY_ID = #{replyId} connect by nocycle prior reply_id = reply_parent_id)
+                  in (select REPLY_ID
+                      from REPLY
+                      start with REPLY_ID = #{replyId}
+                      connect by nocycle prior reply_id = reply_parent_id)
     </delete>
 
     <select id="findAll" resultType="hello.blogService.domain.Reply">
@@ -55,30 +58,31 @@
     </select>
 
     <select id="findByBoardId" resultType="hello.blogService.domain.Reply">
-        select reply_id            as replyId
-             , reply_content       as replyContent
-             , reply_writer        as replyWriter
-             , reply_date          as replyDate
-             , board_id            as boardId
-             , REPLY_MODIFIED_DATE as replyModifiedDate
-             , REPLY_PARENT_ID     as replyParentId
-             , REPLY_DEPTH         as replyDepth
-             , REPLY_ORDER         as replyOrder
+        select reply_id
+             , reply_content
+             , reply_writer_id
+             , reply_write_date
+             , board_id
+             , REPLY_MODIFY_DATE
+             , REPLY_PARENT_ID
+             , REPLY_DEPTH
+             , REPLY_ORDER
         from REPLY
         where BOARD_ID = #{boardId}
         order by REPLY_ORDER
     </select>
 
     <select id="findByReplyId" resultType="hello.blogService.domain.Reply">
-        select reply_id            as replyId
-             , reply_content       as replyContent
-             , reply_writer        as replyWriter
-             , reply_date          as replyDate
-             , board_id            as boardId
-             , REPLY_MODIFIED_DATE as replyModifiedDate
-             , REPLY_PARENT_ID     as replyParentId
-             , REPLY_DEPTH         as replyDepth
-             , REPLY_ORDER         as replyOrder
+        select reply_id
+             , reply_content
+             , reply_writer_id
+             , reply_writer_pwd
+             , reply_write_date
+             , board_id
+             , REPLY_MODIFY_DATE
+             , REPLY_PARENT_ID
+             , REPLY_DEPTH
+             , REPLY_ORDER
         from REPLY
         where REPLY_ID = #{replyId}
     </select>

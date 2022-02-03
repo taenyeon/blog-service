@@ -43,7 +43,7 @@ public class ReplyService {
     }
 
     public int modifyReply(Reply reply){
-        reply.setReplyModifiedDate(DateSet.getNow());
+        reply.setReplyModifyDate(DateSet.getNow());
         return replyRepository.updateReply(reply);
 
     }

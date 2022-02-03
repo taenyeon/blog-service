@@ -25,15 +25,10 @@ public class BoardController {
 
     @GetMapping()
     public String boards(Model model,
-                         @RequestParam(required = false, defaultValue = "1") int page,
-                         @RequestParam(required = false, defaultValue = "1") int range,
-                         @RequestParam(required = false, defaultValue = "title") String searchType,
-                         @RequestParam(required = false, defaultValue = "") String keyword) {
+                         @RequestParam(required = false, defaultValue = "1") int page) {
         Pagination pagination = new Pagination();
-        pagination.setSearchType(searchType);
-        pagination.setKeyword(keyword);
-        int listCnt = boardService.getBoardListCnt(pagination);
-        pagination.pageInfo(page, range, listCnt);
+        int listCnt = boardService.getBoardListCnt();
+        pagination.pageInfo(page,listCnt);
         List<Board> boards = boardService.getBoards(pagination);
         model.addAttribute("boards", boards);
         model.addAttribute("pagination", pagination);
@@ -49,7 +44,7 @@ public class BoardController {
 
     @GetMapping("/add")
     public String addForm() {
-        return "addBoard";
+        return "boards/addBoard";
     }
 
     @PostMapping("/add")
@@ -60,7 +55,10 @@ public class BoardController {
 
         String login = (String) session.getAttribute("login");
         board.setBoardWriter(login);
-        int boardId = boardService.createBoard(board, fileList);
+        int boardId = 0;
+        for (int i = 0; i<50; i++){
+        boardId = boardService.createBoard(board, fileList);
+        }
         if (boardId != 0) {
             redirectAttributes.addAttribute("boardId", boardId);
         } else {

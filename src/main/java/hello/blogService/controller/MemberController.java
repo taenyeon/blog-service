@@ -81,7 +81,8 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     public String memberInfo(@PathVariable String memberId, Model model, HttpServletRequest request) {
-        if (request.getSession().getAttribute("login").equals(memberId)) {
+        String login = (String) request.getSession().getAttribute("login");
+        if (login != null && login.equals(memberId)) {
             Optional<Member> member = memberService.findMember(memberId);
             model.addAttribute("member", member.get());
             return "members/memberInfo";

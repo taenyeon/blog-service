@@ -11,7 +11,7 @@ import java.util.List;
 public class Board {
     private int boardId;
 
-    private int boardNum;
+    private int categoryId;
 
     private String boardTitle;
 

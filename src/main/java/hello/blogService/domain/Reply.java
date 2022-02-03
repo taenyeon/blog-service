@@ -15,7 +15,9 @@ public class Reply {
     private String replyContent;
 
     // 댓글 작성자
-    private String replyWriter;
+    private String replyWriterId;
+
+    private String replyWriterPwd;
 
     // 댓글 작성일
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")
@@ -23,7 +25,7 @@ public class Reply {
 
     //댓글 수정일
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime replyModifiedDate;
+    private LocalDateTime replyModifyDate;
     // 댓글이 속한 게시글 번호
     private int boardId;
     // 부모 댓글 번호 -> 대댓글일 경우, 부모 댓글 삭제시 같이 삭제하기 위함

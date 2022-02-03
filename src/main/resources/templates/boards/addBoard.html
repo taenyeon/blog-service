@@ -5,25 +5,25 @@
 <div layout:fragment="content">
     <head>
         <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
-        </script>
         <script type="text/javascript">
-            $(document).ready(function (e){
+            $(document).ready(function (e) {
+                getCategories();
 
-        CKEDITOR.replace("content",{
-            uploadUrl:"/file/img/dropUpload"
-        }); // 편집기
+                CKEDITOR.replace("content", {
+                    uploadUrl: "/file/img/dropUpload"
+                }); // 편집기
 
-                $("input[type='file']").change(function(e){
+                $("input[type='file']").change(function (e) {
 
                     //div 내용 비워주기
                     $('#preview').empty();
 
                     var files = e.target.files;
-                    var arr =Array.prototype.slice.call(files);
+                    var arr = Array.prototype.slice.call(files);
 
                     //업로드 가능 파일인지 체크
-                    for(var i=0;i<files.length;i++){
-                        if(!checkExtension(files[i].name,files[i].size)){
+                    for (var i = 0; i < files.length; i++) {
+                        if (!checkExtension(files[i].name, files[i].size)) {
                             return false;
                         }
                     }
@@ -33,18 +33,18 @@
 
                 });//fileInfo change
 
-                function checkExtension(fileName,fileSize){
+                function checkExtension(fileName, fileSize) {
 
                     var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
                     var maxSize = 20971520;  //20MB
 
-                    if(fileSize >= maxSize){
+                    if (fileSize >= maxSize) {
                         alert('파일 사이즈 초과');
                         $("input[type='file']").val("");  //파일 초기화
                         return false;
                     }
 
-                    if(regex.test(fileName)){
+                    if (regex.test(fileName)) {
                         alert('업로드 불가능한 파일이 있습니다.');
                         $("input[type='file']").val("");  //파일 초기화
                         return false;
@@ -52,35 +52,68 @@
                     return true;
                 }
 
-                function preview(arr){
-                    arr.forEach(function(f){
+                function preview(arr) {
+                    arr.forEach(function (f) {
 
                         //파일명이 길면 파일명...으로 처리
                         var fileName = f.name;
-                        if(fileName.length > 10){
-                            fileName = fileName.substring(0,5)+"...";
+                        if (fileName.length > 10) {
+                            fileName = fileName.substring(0, 5) + "...";
                         }
 
                         //div에 이미지 추가
                         var str = '<div style="display: inline-flex; padding: 10px; font-size: 10px"><li style="list-style:none;">';
-                        str += '<span>'+fileName+'</span><br>';
+                        str += '<span>' + fileName + '</span><br>';
 
                         //이미지 파일 미리보기
-                        if(f.type.match('image.*')){
+                        if (f.type.match('image.*')) {
                             var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
                             reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
                                 //str += '<button type="button" class="delBtn" value="'+f.name+'" style="background: red">x</button><br>';
-                                str += '<img src="'+e.target.result+'" title="'+f.name+'" width=50 height=50 />';
+                                str += '<img src="' + e.target.result + '" title="' + f.name + '" width=50 height=50 />';
                                 str += '</li></div>';
                                 $(str).appendTo('#preview');
                             }
                             reader.readAsDataURL(f);
-                        }else{
-                            str += '<img src="/img/fileImg.png" title="'+f.name+'" width=50 height=50 />';
+                        } else {
+                            str += '<img src="/img/fileImg.png" title="' + f.name + '" width=50 height=50 />';
                             $(str).appendTo('#preview');
                         }
                     });//arr.forEach
                 }
+
+                function getCategories() {
+                    let result = '';
+                    result += "<select name='categoryId'>";
+                    $.ajax({
+                        url: '/category',
+                        method: 'GET',
+                        success: function (data) {
+                            $.each(data, function (key, value) {
+                                let categoryId = value.categoryId;
+                                let categoryName = value.categoryName;
+                                result += "<option value='" + categoryId + "'>" + categoryName + "</option>"
+                            })
+                            result += "</select>"
+                            $("#category").html(result);}
+                    })
+                }
+
+                $("#addCategoryBtn").click(function () {
+                    $.ajax({
+                        url : '/category',
+                        method: 'POST',
+                        data:{ "categoryName" : $("#addCategory").val()},
+                        statusCode: {
+                            200: function () {
+                                getCategories();
+                            },
+                            500 : function () {
+                                alert("이미 카테고리가 존재합니다.")
+                            }
+                        }
+                    })
+                });
             });
         </script>
     </head>
@@ -88,15 +121,24 @@
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
+    <div>
+        <label for="addCategory">카테고리 생성하기</label>
+        <input type="text" name="addCategory" id="addCategory">
+        <input type="button" name="addCategoryBtn" id="addCategoryBtn" value="addCategory">
+    </div>
     <form name="form" action="/boards/add" id="form" role="form" method="post" enctype="multipart/form-data">
         <div class="mb-3">
+            <div id="category">
+            </div>
+        </div>
+        <div class="mb-3">
             <label for="title">제목</label>
-            <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요" required>
+            <input type="text" class="form-control" name="boardTitle" id="title" placeholder="제목을 입력해 주세요" required>
         </div>
         <div class="mb-3">
             <label for="content">내용</label>
-                <textarea rows="5" cols="60"
-                           name="content" id="content"></textarea>
+            <textarea rows="5" cols="60"
+                      name="boardContent" id="content"></textarea>
         </div>
         <div class="mb-3">
             <label for="fileList">파일</label>

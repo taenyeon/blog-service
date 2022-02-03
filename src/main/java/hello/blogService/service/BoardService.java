@@ -27,8 +27,8 @@ public class BoardService {
         this.boardRepository = boardRepository;
         this.fileService = fileService;
     }
-    public int getBoardListCnt(Pagination pagination){
-        return boardRepository.getBoardListCnt(pagination);
+    public int getBoardListCnt(){
+        return boardRepository.getBoardListCnt();
     }
 
     public List<Board> getBoards(Pagination pagination) {

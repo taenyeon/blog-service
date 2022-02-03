@@ -4,9 +4,7 @@
 
     <update id="update">
         update MEMBER
-        set member_tel=#{memberTel},
-            member_birth=#{memberBirth},
-            member_img=#{memberImg}
+        set member_img=#{memberImg}
         where member_id = #{memberId}
     </update>
 
@@ -22,12 +20,10 @@
     </select>
 
     <insert id="save" parameterType="Member">
-        insert into member(member_id, member_pwd, member_name, member_tel, member_birth, member_email)
+        insert into member(member_id, member_pwd, member_name, member_email)
         values (#{memberId},
                 #{memberPwd},
                 #{memberName},
-                #{memberTel,jdbcType=VARCHAR},
-                #{memberBirth,jdbcType=DATE},
                 #{memberEmail})
     </insert>
 

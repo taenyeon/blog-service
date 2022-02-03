@@ -16,7 +16,7 @@ import java.util.Map;
 public class ReplyController {
     private final ReplyService replyService;
 
-    public ReplyController(ReplyRepository replyRepository, ReplyService replyService) {
+    public ReplyController(ReplyService replyService) {
         this.replyService = replyService;
     }
 
@@ -31,7 +31,7 @@ public class ReplyController {
     public ResponseEntity<Object> addReply(@ModelAttribute Reply reply, HttpServletRequest request) {
         String login = (String) request.getSession().getAttribute("login");
         if (login != null) {
-            reply.setReplyWriter(login);
+            reply.setReplyWriterId(login);
             int result = replyService.addReply(reply);
             if (result > 0) {
                 return ResponseEntity.ok().build();

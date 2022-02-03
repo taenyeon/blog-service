@@ -11,10 +11,10 @@ import java.util.Optional;
 @Mapper
 public interface BoardRepository {
     List<Board> findByNum(Pagination pagination);
-    Optional<Board> findById(@Param("id") String id);
+    Optional<Board> findById(@Param("boardId") String boardId);
     int insertBoard(Board board);
     int updateBoard(Board board);
-    int deleteBoard(@Param("id") String id);
-    int hitUp(@Param("id") String id);
-    int getBoardListCnt(Pagination pagination);
+    int deleteBoard(@Param("boardId") String boardId);
+    int hitUp(@Param("boardId") String boardId);
+    int getBoardListCnt();
 }

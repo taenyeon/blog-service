@@ -3,29 +3,29 @@
 <mapper namespace="hello.blogService.repository.BoardRepository">
 
     <insert id="insertBoard" parameterType="hello.blogService.domain.Board">
-        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+        <selectKey keyProperty="boardId" keyColumn="board_id" resultType="int" order="BEFORE">
             select BOARD_ID_UP.nextval from DUAL
         </selectKey>
         insert into BOARD(board_id, board_title,board_content,board_writer,board_write_date,CATEGORY_ID)
-        values (#{boardId},#{boardTitle},#{boardContent},#{boardWriter},#{boardWriteDate})
+        values (#{boardId},#{boardTitle},#{boardContent},#{boardWriter},#{boardWriteDate},#{categoryId})
     </insert>
 
     <update id="updateBoard">
         update BOARD
-        set title=#{boardTitle},
-            content=#{content},
-            "date" = #{date}
-        where id = #{id}
+        set board_title=#{boardTitle},
+            board_content=#{boardContent},
+            board_modify_date = #{boardModifyDate}
+        where id = #{boardId}
     </update>
     <update id="hitUp">
         update BOARD
-        set hit=hit + 1
-        where ID = #{id}
+        set board_hit=board_hit + 1
+        where BOARD_ID = #{boardId}
     </update>
 
     <delete id="deleteBoard" parameterType="string">
-        delete BOARD
-        where ID = #{id}
+        update board
+        set BOARD_IS_DEL = '1' where BOARD_ID=#{boardId}
     </delete>
 
     <select id="findByNum" resultType="hello.blogService.domain.Board"
@@ -33,42 +33,21 @@
 
         SELECT *
         FROM (
-                 SELECT ROW_NUMBER() over (order by id desc ) AS num,
-                        b.*
-                 FROM board b
-                 WHERE rownum &lt;= #{endList}
-            <if test="searchType=='title' and keyword != null and keyword != '' ">
-                AND b.title like '%' || #{keyword} || '%'
-            </if>
-            <if test="searchType=='content' and keyword != null and keyword != '' ">
-                AND b.CONTENT like '%' || #{keyword} || '%'
-            </if>
-            <if test="searchType=='writer' and keyword != null and keyword != '' ">
-                AND b.writer like '%' || #{keyword} || '%'
-            </if>
-             )
+        SELECT ROW_NUMBER() over (order by board_id desc ) AS num,
+        b.*
+        FROM board b
+        WHERE rownum &lt;= #{endList})
         WHERE #{startList} &lt; num
     </select>
 
     <select id="findById" resultType="hello.blogService.domain.Board">
         select *
         from BOARD
-        where ID = #{id}
+        where BOARD_ID = #{boardId}
     </select>
 
     <select id="getBoardListCnt" resultType="int">
         select count(*) as listCnt
         from BOARD
-<if test="keyword != null and keyword != ''" >
-    <if test="searchType=='title'">
-        WHERE BOARD.TITLE LIKE '%' || #{keyword} || '%'
-    </if>
-    <if test="searchType=='content'">
-        WHERE BOARD.CONTENT LIKE '%' || #{keyword} || '%'
-    </if>
-    <if test="searchType=='writer'">
-        WHERE BOARD.WRITER LIKE '%' || #{keyword} || '%'
-    </if>
-</if>
     </select>
 </mapper>
