@@ -1,9 +1,12 @@
 package hello.blogService.service;
 
-import hello.blogService.domain.FileInfo;
-import hello.blogService.domain.Member;
+import hello.blogService.dto.FileInfo;
+import hello.blogService.dto.Member;
 import hello.blogService.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +18,7 @@ import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
-public class MemberService {
+public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileService fileService;
@@ -73,12 +76,11 @@ public class MemberService {
      * 회원 로그인
      */
     public Optional<Member> loginMember(Member member) {
-        Optional<Member> byId = memberRepository.findById(member.getMemberId());
-        System.out.println("byId.get().isMemberIsDel() = " + byId.get().isMemberIsDel());
-        Optional<Member> loginMember = memberRepository.findById(member.getMemberId());
+        Optional<Member> loginMember = memberRepository.login(member.getMemberId());
         if (loginMember.isPresent()) {
             // passwordEncoder 의 match() 메소드를 통해 암호화한 비밀번호와 입력한 비밀번호 비교
             if (passwordEncoder.matches(member.getMemberPwd(),loginMember.get().getMemberPwd())){
+                loginMember.get().setMemberPwd(null);
             return loginMember;
             } else {
                 throw new IllegalStateException("비밀번호 오류입니다.");
@@ -88,12 +90,12 @@ public class MemberService {
         }
     }
 
-    public String updateMember(Member member, List<MultipartFile> files) throws IOException {
+    public Optional<Member> updateMember(Member member, List<MultipartFile> files) throws IOException {
         List<FileInfo> fileInfoList = fileService.boardFileUpload(files, 0);
         member.setMemberImg(fileInfoList.get(0).getFilePath());
         int result = memberRepository.update(member);
         if (result != 0) {
-            return member.getMemberImg();
+            return memberRepository.findById(member.getMemberId());
         } else {
             throw new IllegalStateException("업데이트에 실패하였습니다.");
         }
@@ -101,5 +103,11 @@ public class MemberService {
 
     public Optional<Member> findMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
+        Optional<Member> loginMember = memberRepository.login(memberId);
+        return loginMember.orElse(null);
     }
 }

@@ -1,4 +1,4 @@
-package hello.blogService.domain;
+package hello.blogService.dto;
 
 import lombok.Getter;
 import lombok.Setter;

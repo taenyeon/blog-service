@@ -25,6 +25,7 @@ dependencies {
 	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.6.2'
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
 	// View에서 현재 로그인된 사용자의 정보를 가져올 수 있다.
 	compileOnly 'org.projectlombok:lombok:1.18.22'
@@ -38,6 +39,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.2'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+	// OAuth 소셜 로그인
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.3'
 
 }
 

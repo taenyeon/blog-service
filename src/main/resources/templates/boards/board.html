@@ -124,7 +124,6 @@
                 // '-'를 기준으로 잘라 뒤에 있는 댓글의 번호를 가져옴.
                 let str = id.split('-')[1];
                 alert(str);
-                // 현재 값을 가져오는 작업이 안되서 일단 보류
                 if (modifyStatus) {
                     let content = $("#getModifyContent").val();
                     $.ajax({
@@ -225,28 +224,13 @@
 </head>
 <body>
     <div class="py-5 text-center">
-        <h2>게시판</h2>
     </div>
-    <table class="table table-horizontal table-bordered text-center">
-
-        <thead class="thead-strong">
-        <tr>
-            <th>게시글번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>최종수정일</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        <tr>
-            <td id="boardId" th:text="${board.getBoardId}"></td>
-            <td th:text="${board.getBoardTitle}"></td>
-            <td th:text="${board.getBoardWriter}"></td>
-            <td th:text="${board.getBoardWriteDate}"></td>
-
-        </tr>
-        </tbody>
-    </table>
+    <div>
+        <b style="color: #0a53be" id="boardId" th:text="${board.getBoardId}"></b><span>번</span>
+        <h1 th:text="${board.getBoardTitle}"></h1>
+        <p style="color: #cccccc" th:text="${board.getBoardWriteDate}"></p>
+        <hr style="size: 2px;color:#0a53be;">
+    </div>
     <div th:each="fileInfo : ${board.fileInfos}">
         첨부파일 <a href="" download th:href="@{/file/download(filePath=${fileInfo.filePath},fileName=${fileInfo.fileName})}"
                 th:text="${fileInfo.getFileName()+'   '+fileInfo.getFileSize()+'KB'}"></a>

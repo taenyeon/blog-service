@@ -1,6 +1,7 @@
 package hello.blogService.repository;
 
-import hello.blogService.domain.Member;
+import hello.blogService.dto.Member;
+import hello.blogService.dto.OAuthUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,10 +10,8 @@ import java.util.Optional;
 
 @Mapper
 public interface MemberRepository {
-    int save(Member member);
-    Optional<Member> findById(@Param("memberId") String memberId);
-    List<Member> findAll();
-    Optional<Member> login(@Param("memberId") String memberId,@Param("memberPwd") String memberPwd);
-    int update(Member member);
-    Optional<Member> findByEmail(@Param("memberEmail") String memberEmail);
+
+    Optional<OAuthUser> findByEmail(String email);
+
+    void saveOAuthUser(OAuthUser oAuthUser);
 }

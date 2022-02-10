@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.blogService.repository.BoardRepository">
 
-    <insert id="insertBoard" parameterType="hello.blogService.domain.Board">
+    <insert id="insertBoard" parameterType="hello.blogService.dto.Board">
         <selectKey keyProperty="boardId" keyColumn="board_id" resultType="int" order="BEFORE">
             select BOARD_ID_UP.nextval from DUAL
         </selectKey>
@@ -28,8 +28,8 @@
         set BOARD_IS_DEL = '1' where BOARD_ID=#{boardId}
     </delete>
 
-    <select id="findByNum" resultType="hello.blogService.domain.Board"
-            parameterType="hello.blogService.domain.Pagination">
+    <select id="findByNum" resultType="hello.blogService.dto.Board"
+            parameterType="hello.blogService.dto.Pagination">
 
         SELECT *
         FROM (
@@ -40,7 +40,7 @@
         WHERE #{startList} &lt; num
     </select>
 
-    <select id="findById" resultType="hello.blogService.domain.Board">
+    <select id="findById" resultType="hello.blogService.dto.Board">
         select *
         from BOARD
         where BOARD_ID = #{boardId}

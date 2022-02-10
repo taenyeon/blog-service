@@ -1,4 +1,4 @@
-package hello.blogService.domain;
+package hello.blogService.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,12 +33,20 @@ public class Pagination {
         this.endList = page * listSize;
 
         if (page >= 3) {
+            if (pageCnt - page <= 2){
+                this.startPage = pageCnt - 4;
+            }else {
             this.startPage = page - 2;
+            }
         } else {
             this.startPage = 1;
         }
         if (pageCnt - page >= 2) {
-            this.endPage = page + 2;
+            if (page < 3){
+                this.endPage = 5;
+            }else {
+                this.endPage = page + 2;
+            }
         } else {
             this.endPage = pageCnt;
         }

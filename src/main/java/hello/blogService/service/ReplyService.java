@@ -1,7 +1,7 @@
 package hello.blogService.service;
 
 import hello.blogService.config.DateSet;
-import hello.blogService.domain.Reply;
+import hello.blogService.dto.Reply;
 import hello.blogService.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +11,7 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class ReplyService {
+
     private final ReplyRepository replyRepository;
 
     public ReplyService(ReplyRepository replyRepository) {

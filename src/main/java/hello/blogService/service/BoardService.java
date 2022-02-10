@@ -1,8 +1,8 @@
 package hello.blogService.service;
 
-import hello.blogService.domain.Board;
-import hello.blogService.domain.FileInfo;
-import hello.blogService.domain.Pagination;
+import hello.blogService.dto.Board;
+import hello.blogService.dto.FileInfo;
+import hello.blogService.dto.Pagination;
 import hello.blogService.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package hello.blogService.service;
 
-import hello.blogService.domain.FileInfo;
+import hello.blogService.dto.FileInfo;
 import hello.blogService.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

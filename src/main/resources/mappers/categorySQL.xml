@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hello.blogService.repository.CategoryRepository">
+    <insert id="insertCategory">
+        insert into CATEGORY(category_id, category_name) values (CATEGORY_ID_UP.nextval,#{categoryName})
+    </insert>
+
+    <select id="findAll" resultType="hello.blogService.dto.Category">
+        select * from CATEGORY where CATEGORY_IS_DEL = '0'
+    </select>
+</mapper>

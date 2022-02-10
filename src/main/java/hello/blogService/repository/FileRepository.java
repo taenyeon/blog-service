@@ -1,6 +1,6 @@
 package hello.blogService.repository;
 
-import hello.blogService.domain.FileInfo;
+import hello.blogService.dto.FileInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

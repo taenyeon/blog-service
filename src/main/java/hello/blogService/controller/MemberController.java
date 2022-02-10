@@ -1,6 +1,6 @@
 package hello.blogService.controller;
 
-import hello.blogService.domain.Member;
+import hello.blogService.dto.Member;
 import hello.blogService.service.EmailService;
 import hello.blogService.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +62,9 @@ public class MemberController {
 
     @PostMapping("/login")
     public String memberLogin(Member member, HttpServletRequest request) {
-        System.out.println("memberId : "+member.getMemberId());
-        Member loginMember = memberService.loginMember(member).get();
-        request.getSession().setAttribute("login", loginMember.getMemberId());
-        request.getSession().setAttribute("img", loginMember.getMemberImg());
+//        Member loginMember = memberService.loginMember(member).get();
+//        request.getSession().setAttribute("login", loginMember);
+        memberService.loadUserByUsername(member.getMemberId());
         String referer = (String) request.getSession().getAttribute("redirectURI");
         request.getSession().removeAttribute("redirectURI");
         return "redirect:" + referer;
@@ -74,15 +73,16 @@ public class MemberController {
     @GetMapping("/logout")
     public String memberLogout(HttpServletRequest request) {
         request.getSession().removeAttribute("login");
-        request.getSession().removeAttribute("img");
         String referer = request.getHeader("REFERER");
         return "redirect:" + referer;
     }
 
     @GetMapping("/{memberId}")
     public String memberInfo(@PathVariable String memberId, Model model, HttpServletRequest request) {
-        String login = (String) request.getSession().getAttribute("login");
-        if (login != null && login.equals(memberId)) {
+        Member login = (Member) request.getSession().getAttribute("login");
+        String loginMemberId = login.getMemberId();
+
+        if (loginMemberId != null && loginMemberId.equals(memberId)) {
             Optional<Member> member = memberService.findMember(memberId);
             model.addAttribute("member", member.get());
             return "members/memberInfo";
@@ -98,9 +98,8 @@ public class MemberController {
                                    RedirectAttributes redirectAttributes,
                                    HttpServletRequest request) throws IOException {
         if (request.getSession().getAttribute("login").equals(memberId)) {
-            String imgSet = memberService.updateMember(member, files);
             redirectAttributes.addAttribute("id", memberId);
-            request.getSession().setAttribute("img", imgSet);
+            request.getSession().setAttribute("login",memberService.updateMember(member, files).get());
             return "redirect:/members/{memberId}";
         } else {
             throw new IllegalStateException("현재 세션에서 제한된 접근입니다.");

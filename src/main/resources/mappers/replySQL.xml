@@ -51,13 +51,13 @@
                       connect by nocycle prior reply_id = reply_parent_id)
     </delete>
 
-    <select id="findAll" resultType="hello.blogService.domain.Reply">
+    <select id="findAll" resultType="hello.blogService.dto.Reply">
         select *
         from REPLY
         order by REPLY_ID desc
     </select>
 
-    <select id="findByBoardId" resultType="hello.blogService.domain.Reply">
+    <select id="findByBoardId" resultType="hello.blogService.dto.Reply">
         select reply_id
              , reply_content
              , reply_writer_id
@@ -72,7 +72,7 @@
         order by REPLY_ORDER
     </select>
 
-    <select id="findByReplyId" resultType="hello.blogService.domain.Reply">
+    <select id="findByReplyId" resultType="hello.blogService.dto.Reply">
         select reply_id
              , reply_content
              , reply_writer_id
@@ -91,10 +91,5 @@
         select NVL(MAX(REPLY_ORDER), 0)
         from REPLY
         where BOARD_ID = #{boardId}
-    </select>
-    <select id="findMaxReplyOrderByReplyId" resultType="java.lang.Integer">
-        select NVL(MAX(REPLY_ORDER), 0)
-        from REPLY
-        where REPLY_PARENT_ID = #{replyId}
     </select>
 </mapper>

@@ -1,6 +1,6 @@
 package hello.blogService.controller;
 
-import hello.blogService.domain.FileInfo;
+import hello.blogService.dto.FileInfo;
 import hello.blogService.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;

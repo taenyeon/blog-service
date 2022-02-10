@@ -1,7 +1,7 @@
 package hello.blogService.controller;
 
-import hello.blogService.domain.Board;
-import hello.blogService.domain.Pagination;
+import hello.blogService.dto.Board;
+import hello.blogService.dto.Pagination;
 import hello.blogService.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

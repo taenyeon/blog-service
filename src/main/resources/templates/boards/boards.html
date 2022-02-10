@@ -3,57 +3,85 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <div layout:fragment="content">
-<head>
-    <script>
-        //이전 버튼 이벤트
-        function fn_prev(page, range, rangeSize) {
-            page = ((range - 2) * rangeSize) + 1;
-            range = range - 1;
-            let url = "/boards";
-            url += "?page=" + page;
-            url += "&range=" + range;
+    <head>
+        <style>
+            .page-link:hover {
+                z-index: 2;
+                color: #0d6efd;
+                background-color: transparent;
+                border-color: #0d6efd;
+            }
 
-            location.href = url;
-        }
+            .page-item.active .page-link {
+                z-index: 3;
+                color: #0d6efd;
+                background-color: transparent;
+                border-color: #0d6efd;
+            }
 
-        //페이지 번호 클릭
-        function fn_pagination(page, range, searchType, keyword) {
-            let url = "/boards";
-            url = url + "?page=" + page;
-            url = url + "&range=" + range;
-            url = url + "&searchType=" + searchType;
-            url = url + "&keyword=" + keyword;
-            location.href = url;
-        }
+            .page-link:focus {
+                z-index: 3;
+                color: #0d6efd;
+                background-color: transparent;
+                border-color: #0d6efd;
+                outline: 0;
+            }
 
-        //다음 버튼 이벤트
-        function fn_next(page, range, rangeSize) {
-            page = parseInt((range * rangeSize)) + 1;
-            range = parseInt(range) + 1;
+            .selectedPage {
+                text-decoration: underline;
+                text-underline-position: under;
+            }
+        </style>
+        <script>
+            //이전 버튼 이벤트
+            function fn_prev(page, range, rangeSize) {
+                page = ((range - 2) * rangeSize) + 1;
+                range = range - 1;
+                let url = "/boards";
+                url += "?page=" + page;
+                url += "&range=" + range;
 
-            let url = "/boards";
-            url = url + "?page=" + page;
-            url = url + "&range=" + range;
+                location.href = url;
+            }
 
-            location.href = url;
-        }
+            //페이지 번호 클릭
+            function fn_pagination(page, range, searchType, keyword) {
+                let url = "/boards";
+                url = url + "?page=" + page;
+                url = url + "&range=" + range;
+                url = url + "&searchType=" + searchType;
+                url = url + "&keyword=" + keyword;
+                location.href = url;
+            }
 
-        $(document).on('click', '#search', function (e) {
-            e.preventDefault();
-            let url = "/boards";
-            url = url + "?searchType=" + $('#searchType').val();
-            url = url + "&keyword=" + $('#keyword').val();
-            location.href = url;
-            console.log(url);
-        });
+            //다음 버튼 이벤트
+            function fn_next(page, range, rangeSize) {
+                page = parseInt((range * rangeSize)) + 1;
+                range = parseInt(range) + 1;
 
-        function getBoards(){
+                let url = "/boards";
+                url = url + "?page=" + page;
+                url = url + "&range=" + range;
 
-        }
+                location.href = url;
+            }
 
-    </script>
-</head>
-<body>
+            $(document).on('click', '#search', function (e) {
+                e.preventDefault();
+                let url = "/boards";
+                url = url + "?searchType=" + $('#searchType').val();
+                url = url + "&keyword=" + $('#keyword').val();
+                location.href = url;
+                console.log(url);
+            });
+
+            function getBoards() {
+
+            }
+
+        </script>
+    </head>
+    <body>
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
@@ -68,40 +96,33 @@
     </div>
     <hr class="my-4">
     <div>
-        <table class="table table-hover" style="text-align: center;">
-            <thead>
-            <tr>
-                <th style="width: 25%">제목</th>
-                <th style="width: 16.66%">작성자</th>
-                <th style="width: 25%">작성일</th>
-                <th style="width: 16.66%">조회수</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="board : ${boards}">
-                <td><a href="item.html" th:href="@{|/boards/${board.getBoardId}|}"
-                       th:text="${board.getBoardTitle}">상품명</a></td>
-                <td th:text="${board.getBoardWriter}">작성자</td>
-                <td th:text="${board.getBoardWriteDate}">작성일</td>
-                <td th:text="${board.getBoardHit}">조회수</td>
-            </tr>
-            </tbody>
-        </table>
+        <div th:each="board : ${boards}">
+            <a href="" th:href="@{|/boards/${board.getBoardId}|}" style="color: #333333; text-decoration: none">
+                <p>
+                    <span style="color:#0a53be;" th:text="${board.getBoardWriteDate}"></span>
+                </p>
+                <h1 th:text="${board.getBoardTitle}"></h1>
+            </a>
+            <hr>
+        </div>
     </div>
     <!-- pagination{s} -->
     <div id="paginationBox">
-        <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" th:href="@{/boards(page=1)}"> << </a>
+        <ul class="pagination justify-content-center" style="font-size: medium">
+            <li class="page-item"><a class="page-link" style="border: none;" th:href="@{/boards(page=1)}"> << </a>
             </li>
             <li th:each="number : ${#numbers.sequence(pagination.startPage,pagination.endPage)}" class=""
-                th:class="|page-item ${pagination.page == number ? 'active' : ''}|"><a th:text="${number}"
-                                                                                       class="page-link"
-                                                                                       th:href="@{/boards(page=${number})}"> 번호 </a></li>
+                th:class="|page-item ${pagination.page == number ? 'active selectedPage' : ''}|"><a th:text="${number}"
+                                                                                                    class="page-link"
+                                                                                                    style="border: none"
+                                                                                                    th:href="@{/boards(page=${number})}">
+                번호 </a></li>
 
-            <li class="page-item"><a class="page-link" th:href="@{/boards(page=${pagination.getPageCnt()})}"> >> </a></li>
+            <li class="page-item"><a class="page-link" style="border: none"
+                                     th:href="@{/boards(page=${pagination.getPageCnt()})}"> >> </a></li>
         </ul>
     </div>
     <!-- pagination -->
-</body>
+    </body>
 </div> <!-- /container -->
 </html>

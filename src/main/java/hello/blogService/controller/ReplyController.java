@@ -1,7 +1,6 @@
 package hello.blogService.controller;
 
-import hello.blogService.domain.Reply;
-import hello.blogService.repository.ReplyRepository;
+import hello.blogService.dto.Reply;
 import hello.blogService.service.ReplyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +23,7 @@ public class ReplyController {
     public Map<String, List<Reply>> getReply(@PathVariable String boardId) {
         Map<String, List<Reply>> map = new HashMap<>();
         map.put("reply", replyService.findById(boardId));
+        ResponseEntity.ok(map);
         return map;
     }
 

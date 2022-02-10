@@ -2,40 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.blogService.repository.MemberRepository">
 
-    <update id="update">
-        update MEMBER
-        set member_img=#{memberImg}
-        where member_id = #{memberId}
-    </update>
+    <insert id="saveOAuthUser">
 
-    <select id="findAll" resultType="Member">
-        select *
-        from member
-    </select>
-
-    <select id="findById" resultType="Member" parameterType="string">
-        select *
-        from member
-        where MEMBER_ID = #{memberId}
-    </select>
-
-    <insert id="save" parameterType="Member">
-        insert into member(member_id, member_pwd, member_name, member_email)
-        values (#{memberId},
-                #{memberPwd},
-                #{memberName},
-                #{memberEmail})
     </insert>
+    <select id="findByEmail" resultType="hello.blogService.dto.OAuthUser">
 
-    <select id="login" resultType="Member" parameterType="string">
-        select *
-        from member
-        where member_id = #{memberId}
-          and member_pwd = #{memberPwd}
     </select>
-    <select id="findByEmail" resultType="Member">
-        select *
-        from MEMBER
-        where member_EMAIL = #{memberEmail}
-    </select>
+
 </mapper>

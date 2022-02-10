@@ -4,7 +4,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+/src/main/java/hello/blogService/config/EmailConfig.java
+/src/main/resources/properties/email.properties
+/src/main/resources/application.properties
 ### STS ###
 .apt_generated
 .classpath
