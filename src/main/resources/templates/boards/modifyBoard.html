@@ -16,7 +16,7 @@
     <div class="py-5 text-center">
         <h2>게시판</h2>
     </div>
-    <form name="form" th:action="@{|/boards/${board.getBoardId}/modify|}" action="수정" id="form" role="form" method="post" enctype="multipart/form-data">
+    <form name="form" th:action="@{|/board/${board.getBoardId}/modify|}" action="수정" id="form" role="form" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="title">제목</label>
             <input type="text" class="form-control" name="title" id="title" value="제목" th:value="${board.getBoardTitle}" required>
@@ -30,7 +30,7 @@
             <input type="file" name="fileList" id="fileList" multiple>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">수정</button>
-        <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/boards/${board.getBoardId}|}" href="/boards"></a>취소</button>
+        <button id="cancel" type="button" class="btn btn-sm btn-primary"><a th:href="@{|/board/${board.getBoardId}|}" href="/board"></a>취소</button>
     </form>
 </body>
 </div> <!-- /container -->

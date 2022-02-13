@@ -126,7 +126,7 @@
         <input type="text" name="addCategory" id="addCategory">
         <input type="button" name="addCategoryBtn" id="addCategoryBtn" value="addCategory">
     </div>
-    <form name="form" action="/boards/add" id="form" role="form" method="post" enctype="multipart/form-data">
+    <form name="form" th:action="@{/board/add}" id="form" role="form" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <div id="category">
             </div>
@@ -149,7 +149,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">저장</button>
-        <button type="button" class="btn btn-sm btn-primary"><a href="/boards"></a>목록</button>
+        <button type="button" class="btn btn-sm btn-primary"><a th:href="@{/board}"></a>목록</button>
     </form>
     </body>
 </div> <!-- /container -->

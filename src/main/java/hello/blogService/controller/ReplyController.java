@@ -31,9 +31,9 @@ public class ReplyController {
     @PostMapping("/add")
     public ResponseEntity<Object> addReply(@ModelAttribute Reply reply, HttpServletRequest request) {
         OAuthUser user = (OAuthUser) request.getSession().getAttribute("user");
+        System.out.println(user.getMemberEmail());
             reply.setReplyWriter(user.getMemberEmail());
             int result = replyService.addReply(reply);
-        System.out.println(result);
             if (result > 0) {
                 return ResponseEntity.ok().build();
             } else {

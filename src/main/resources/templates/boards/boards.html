@@ -37,7 +37,7 @@
             function fn_prev(page, range, rangeSize) {
                 page = ((range - 2) * rangeSize) + 1;
                 range = range - 1;
-                let url = "/boards";
+                let url = "/board";
                 url += "?page=" + page;
                 url += "&range=" + range;
 
@@ -46,7 +46,7 @@
 
             //페이지 번호 클릭
             function fn_pagination(page, range, searchType, keyword) {
-                let url = "/boards";
+                let url = "/board";
                 url = url + "?page=" + page;
                 url = url + "&range=" + range;
                 url = url + "&searchType=" + searchType;
@@ -59,7 +59,7 @@
                 page = parseInt((range * rangeSize)) + 1;
                 range = parseInt(range) + 1;
 
-                let url = "/boards";
+                let url = "/board";
                 url = url + "?page=" + page;
                 url = url + "&range=" + range;
 
@@ -68,7 +68,7 @@
 
             $(document).on('click', '#search', function (e) {
                 e.preventDefault();
-                let url = "/boards";
+                let url = "/board";
                 url = url + "?searchType=" + $('#searchType').val();
                 url = url + "&keyword=" + $('#keyword').val();
                 location.href = url;
@@ -89,7 +89,7 @@
         <div class="col">
             <button th:if="${session.user != null}" class="btn btn-primary float-end"
                     onclick="location.href='addForm.html'"
-                    th:onclick="|location.href='@{/boards/add}'|"
+                    th:onclick="|location.href='@{/board/add}'|"
                     type="button">게시물 작성
             </button>
         </div>
@@ -97,7 +97,7 @@
     <hr class="my-4">
     <div>
         <div th:each="board : ${boards}">
-            <a href="" th:href="@{|/boards/${board.getBoardId}|}" style="color: #333333; text-decoration: none">
+            <a href="" th:href="@{|/board/${board.getBoardId}|}" style="color: #333333; text-decoration: none">
                 <p>
                     <span style="color:#0a53be;" th:text="${board.getBoardWriteDate}"></span>
                 </p>
@@ -109,15 +109,15 @@
     <!-- pagination{s} -->
     <div id="paginationBox">
         <ul class="pagination justify-content-center" style="font-size: medium">
-            <li class="page-item"><a class="page-link" style="border: none;" th:href="@{/boards(page=1)}"> << </a>
+            <li class="page-item"><a class="page-link" style="border: none;" th:href="@{/board(page=1)}"> << </a>
             </li>
             <li th:each="number : ${#numbers.sequence(pagination.startPage,pagination.endPage)}" class=""
                 th:class="|page-item ${pagination.page == number ? 'active selectedPage' : ''}|"><a th:text="${number}"
                                                                                                     class="page-link"
                                                                                                     style="border: none"
-                                                                                                    th:href="@{/boards(page=${number})}"> 번호 </a></li>
+                                                                                                    th:href="@{/board(page=${number})}"> 번호 </a></li>
             <li class="page-item"><a class="page-link" style="border: none"
-                                     th:href="@{/boards(page=${pagination.getPageCnt()})}"> >> </a></li>
+                                     th:href="@{/board(page=${pagination.getPageCnt()})}"> >> </a></li>
         </ul>
     </div>
     <!-- pagination -->
