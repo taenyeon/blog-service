@@ -87,7 +87,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <button th:if="${session.login != null}" class="btn btn-primary float-end"
+            <button th:if="${session.user != null}" class="btn btn-primary float-end"
                     onclick="location.href='addForm.html'"
                     th:onclick="|location.href='@{/boards/add}'|"
                     type="button">게시물 작성
@@ -115,9 +115,7 @@
                 th:class="|page-item ${pagination.page == number ? 'active selectedPage' : ''}|"><a th:text="${number}"
                                                                                                     class="page-link"
                                                                                                     style="border: none"
-                                                                                                    th:href="@{/boards(page=${number})}">
-                번호 </a></li>
-
+                                                                                                    th:href="@{/boards(page=${number})}"> 번호 </a></li>
             <li class="page-item"><a class="page-link" style="border: none"
                                      th:href="@{/boards(page=${pagination.getPageCnt()})}"> >> </a></li>
         </ul>

@@ -52,7 +52,7 @@ public class BoardService {
        return searchBoard(boarId);
     }
 
-    public int createBoard(Board board,List<MultipartFile> fileList) throws IOException {
+    public String createBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setBoardWriteDate(now);
         boardRepository.insertBoard(board);

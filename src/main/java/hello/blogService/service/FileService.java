@@ -42,7 +42,7 @@ public class FileService {
     }
 
     // 파일 업로드 로직
-    public List<FileInfo> boardFileUpload(List<MultipartFile> fileList, int boardId) throws IOException {
+    public List<FileInfo> boardFileUpload(List<MultipartFile> fileList, String boardId) throws IOException {
         List<FileInfo> filesList = new ArrayList<>();
         // 디렉토리 이름
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));

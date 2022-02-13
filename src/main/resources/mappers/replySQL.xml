@@ -5,7 +5,7 @@
         <selectKey keyProperty="replyId" resultType="int" order="BEFORE">
             select REPLY_ID_UP.nextval from DUAL
         </selectKey>
-        insert into REPLY(reply_id, reply_content, reply_writer_id, reply_write_date,
+        insert into REPLY(reply_id, reply_content, reply_writer, reply_write_date,
         REPLY_MODIfy_DATE, board_id,
         REPLY_PARENT_ID, REPLY_DEPTH, REPLY_ORDER)
         values ( #{replyId}
@@ -32,7 +32,7 @@
     <update id="updateReply">
         update REPLY
         set REPLY_CONTENT=#{replyContent},
-            REPLY_MODIFIED_DATE = #{replyModifiedDate}
+            REPLY_MODIFY_DATE = #{replyModifiedDate}
         where REPLY_ID = #{replyId}
     </update>
 
@@ -60,7 +60,7 @@
     <select id="findByBoardId" resultType="hello.blogService.dto.Reply">
         select reply_id
              , reply_content
-             , reply_writer_id
+             , reply_writer
              , reply_write_date
              , board_id
              , REPLY_MODIFY_DATE
@@ -75,8 +75,7 @@
     <select id="findByReplyId" resultType="hello.blogService.dto.Reply">
         select reply_id
              , reply_content
-             , reply_writer_id
-             , reply_writer_pwd
+             , reply_writer
              , reply_write_date
              , board_id
              , REPLY_MODIFY_DATE

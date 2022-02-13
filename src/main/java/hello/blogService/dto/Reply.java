@@ -15,9 +15,11 @@ public class Reply {
     private String replyContent;
 
     // 댓글 작성자
-    private String replyWriterId;
+    private String replyWriterName;
 
-    private String replyWriterPwd;
+    private String replyWriterImg;
+
+    private String replyWriter;
 
     // 댓글 작성일
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "Asia/Seoul")

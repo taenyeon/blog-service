@@ -1,5 +1,6 @@
 package hello.blogService.controller;
 
+import hello.blogService.dto.OAuthUser;
 import hello.blogService.dto.Reply;
 import hello.blogService.service.ReplyService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ReplyController {
         this.replyService = replyService;
     }
 
-    @GetMapping("/{boardId}")
+    @GetMapping("/get/{boardId}")
     public Map<String, List<Reply>> getReply(@PathVariable String boardId) {
         Map<String, List<Reply>> map = new HashMap<>();
         map.put("reply", replyService.findById(boardId));
@@ -29,18 +30,15 @@ public class ReplyController {
 
     @PostMapping("/add")
     public ResponseEntity<Object> addReply(@ModelAttribute Reply reply, HttpServletRequest request) {
-        String login = (String) request.getSession().getAttribute("login");
-        if (login != null) {
-            reply.setReplyWriterId(login);
+        OAuthUser user = (OAuthUser) request.getSession().getAttribute("user");
+            reply.setReplyWriter(user.getMemberEmail());
             int result = replyService.addReply(reply);
+        System.out.println(result);
             if (result > 0) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.status(300).build();
             }
-        } else {
-            return ResponseEntity.status(400).build();
-        }
     }
 
     @PostMapping("/modify")

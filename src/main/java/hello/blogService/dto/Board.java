@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter @Setter
 public class Board {
-    private int boardId;
+    private String boardId;
 
-    private int categoryId;
+    private String categoryId;
 
     private String boardTitle;
 

@@ -1,6 +1,7 @@
 package hello.blogService.controller;
 
 import hello.blogService.dto.Board;
+import hello.blogService.dto.OAuthUser;
 import hello.blogService.dto.Pagination;
 import hello.blogService.service.BoardService;
 import org.springframework.stereotype.Controller;
@@ -53,13 +54,10 @@ public class BoardController {
                            RedirectAttributes redirectAttributes,
                            HttpSession session) throws IOException {
 
-        String login = (String) session.getAttribute("login");
-        board.setBoardWriter(login);
-        int boardId = 0;
-        for (int i = 0; i<50; i++){
-        boardId = boardService.createBoard(board, fileList);
-        }
-        if (boardId != 0) {
+        OAuthUser user = (OAuthUser) session.getAttribute("user");
+        board.setBoardWriter(user.getMemberEmail());
+        String boardId = boardService.createBoard(board, fileList);
+        if (boardId != null) {
             redirectAttributes.addAttribute("boardId", boardId);
         } else {
             throw new IllegalStateException("게시글 생성에 실패하였습니다.");
@@ -88,7 +86,7 @@ public class BoardController {
                               @RequestParam("fileList") List<MultipartFile> fileList,
                               HttpSession session,
                               @ModelAttribute Board board) throws IOException {
-        board.setBoardId(Integer.parseInt(boardId));
+        board.setBoardId(boardId);
         String login = (String) session.getAttribute("login");
         board.setBoardWriter(login);
         int result = boardService.modifyBoard(board, fileList);

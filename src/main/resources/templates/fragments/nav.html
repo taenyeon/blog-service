@@ -17,19 +17,19 @@
                 <li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
                 <li class="nav-item"><a class="nav-link disabled" href="#">Link 3</a></li>
                 <li class="nav-item">
-                    <img th:if="${session.login != null}" style="border-radius: 20px; width: 35px; height: 35px"
-                         th:src="@{/file/img(filePath = ${session.login.getMemberImg})}" src="" alt="">
+                    <img th:if="${session.user != null}" style="border-radius: 20px; width: 35px; height: 35px"
+                         th:src="${session.user.memberImg}" src="" alt="">
                 </li>
                 <li>
-                    <a th:if="${session.login != null}" th:text="${session.login.getMemberId}" class="nav-link"
-                       th:href="@{|/members/${session.login}|}" href="#">아이디</a>
+                    <a th:if="${session.user != null}" th:text="${session.user.memberName}" class="nav-link"
+                       th:href="@{|/member/${session.user.memberEmail}|}" href="#">아이디</a>
                 </li>
                 <li class="nav-item">
-                    <a th:if="${session.login == null}" href="/members/login" class="nav-link">로그인</a>
-                    <a th:if="${session.login != null}" href="/members/logout" class="nav-link">로그아웃</a>
+                    <a th:if="${session.user == null}" th:href="@{/login}" class="nav-link">로그인</a>
+                    <a th:if="${session.user != null}" th:href="@{/logout}" class="nav-link">로그아웃</a>
                 </li>
                 <li class="nav-item">
-                    <a th:if="${session.login == null}" href="" th:href="@{/members/join}" class="nav-link">회원가입</a>
+                    <a th:if="${session.user == null}" href="" th:href="@{/member/join}" class="nav-link">회원가입</a>
                 </li>
             </ul>
 

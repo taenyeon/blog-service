@@ -1,24 +1,37 @@
 package hello.blogService.service;
 
 import hello.blogService.config.DateSet;
+import hello.blogService.dto.OAuthUser;
 import hello.blogService.dto.Reply;
+import hello.blogService.repository.MemberRepository;
 import hello.blogService.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class ReplyService {
 
     private final ReplyRepository replyRepository;
+    private final MemberRepository memberRepository;
 
-    public ReplyService(ReplyRepository replyRepository) {
+    public ReplyService(ReplyRepository replyRepository, MemberRepository memberRepository) {
         this.replyRepository = replyRepository;
+        this.memberRepository = memberRepository;
     }
     public List<Reply> findById(String boardId){
-        return replyRepository.findByBoardId(boardId);
+        List<Reply> replies = replyRepository.findByBoardId(boardId);
+        for (Reply reply : replies){
+            Optional<OAuthUser> userOptional = memberRepository.findByEmail(reply.getReplyWriter());
+            OAuthUser user = userOptional.orElseThrow(() -> new IllegalStateException("Not Found User"));
+            reply.setReplyWriterName(user.getMemberName());
+            reply.setReplyWriterImg(user.getMemberImg());
+        }
+        return replies;
+
     }
 
 

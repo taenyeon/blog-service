@@ -19,5 +19,5 @@ public class FileInfo {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fileDate;
 
-    private int boardId;
+    private String boardId;
 }

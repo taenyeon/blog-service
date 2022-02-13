@@ -3,10 +3,10 @@
 <mapper namespace="hello.blogService.repository.MemberRepository">
 
     <insert id="saveOAuthUser">
-
+        insert into MEMBER(member_email, member_name, member_img, member_role) VALUES (#{memberEmail},#{memberName},#{memberImg},#{memberRole})
     </insert>
     <select id="findByEmail" resultType="hello.blogService.dto.OAuthUser">
-
+        select * from MEMBER where MEMBER_EMAIL= #{memberEmail}
     </select>
 
 </mapper>

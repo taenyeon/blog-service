@@ -7,25 +7,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OAuthUser {
-    private String name;
+    private String memberName;
 
-    private String email;
+    private String memberEmail;
 
-    private String picture;
+    private String memberImg;
 
-    private String role;
+    private String memberRole;
 
     @Builder
-    public OAuthUser(String name, String email, String picture, String role) {
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.role = role;
+    public OAuthUser(String memberName, String memberEmail, String memberImg, String memberRole) {
+        this.memberName = memberName;
+        this.memberEmail = memberEmail;
+        this.memberImg = memberImg;
+        this.memberRole = memberRole;
     }
 
     public OAuthUser update(String name, String picture){
-        this.name = name;
-        this.picture = picture;
+        this.memberName = name;
+        this.memberImg = picture;
         return this;
     }
 }

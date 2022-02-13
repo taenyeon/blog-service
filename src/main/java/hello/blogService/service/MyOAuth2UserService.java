@@ -43,9 +43,9 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
                 registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         OAuthUser user = saveOrUpdate(attributes);
-        session.setAttribute("user", new SessionOAuthUser(user));
+        session.setAttribute("user", user);
         DefaultOAuth2User defaultOAuth2User = new DefaultOAuth2User(Collections.singleton(
-                new SimpleGrantedAuthority(user.getRole()))
+                new SimpleGrantedAuthority(user.getMemberRole()))
                 , attributes.getAttributes()
                 , attributes.getNameAttributeKey());
         log.info(defaultOAuth2User.toString());
@@ -57,7 +57,7 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
         if (user.isPresent()) {
             user.get().update(attributes.getName(), attributes.getPicture());
         } else {
-            user = Optional.ofNullable(attributes.toDomain());
+            user = Optional.ofNullable(attributes.toDTO());
             memberRepository.saveOAuthUser(user.get());
         }
         return user.get();

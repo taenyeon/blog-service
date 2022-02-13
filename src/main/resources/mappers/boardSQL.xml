@@ -3,7 +3,7 @@
 <mapper namespace="hello.blogService.repository.BoardRepository">
 
     <insert id="insertBoard" parameterType="hello.blogService.dto.Board">
-        <selectKey keyProperty="boardId" keyColumn="board_id" resultType="int" order="BEFORE">
+        <selectKey keyProperty="boardId" keyColumn="board_id" resultType="String" order="BEFORE">
             select BOARD_ID_UP.nextval from DUAL
         </selectKey>
         insert into BOARD(board_id, board_title,board_content,board_writer,board_write_date,CATEGORY_ID)

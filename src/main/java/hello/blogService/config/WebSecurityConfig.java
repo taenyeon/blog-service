@@ -1,10 +1,8 @@
 package hello.blogService.config;
 
-import hello.blogService.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import hello.blogService.service.MyOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,10 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MemberService memberService;
+    private final MyOAuth2UserService myOAuth2UserService;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public WebSecurityConfig(MemberService memberService) {
-        this.memberService = memberService;
+    public WebSecurityConfig(MyOAuth2UserService myOAuth2UserService, CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.myOAuth2UserService = myOAuth2UserService;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
 
@@ -34,24 +34,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .disable();
+                .disable()
+                .exceptionHandling()
+                .accessDeniedHandler(customAccessDeniedHandler);
+
         http.authorizeRequests()
-                .antMatchers("/","/members/login","/boards/**","/file/**","/img/**","/css/**","members/join","/ckeditor/**","/js/**").permitAll()
+                .antMatchers("/",
+                        "/login",
+                        "/boards/**",
+                        "/file/**",
+                        "/img/**",
+                        "/css/**",
+                        "members/join",
+                        "/ckeditor/**",
+                        "/js/**",
+                        "/reply/get/**").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
                 .logout()
-                .logoutUrl("members/logout")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .and()
                 .oauth2Login()
-                .loginPage("/googleLogin")
+                .loginPage("/login")
                 .userInfoEndpoint()
                 .userService(myOAuth2UserService);
-    }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(getPasswordEncoder());
     }
 }

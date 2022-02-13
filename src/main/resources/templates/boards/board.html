@@ -53,7 +53,7 @@
             function getReply() {
                 $.ajax({
                     type: "GET",
-                    url: "/reply/" + boardId,
+                    url: "/reply/get/" + boardId,
                     data: {},
                     dataType: "json",
                     success: function (data) {
@@ -63,28 +63,28 @@
                         } else {
                             $.each(data.reply, function (key, value) {
                                 let replyId = value.replyId;
-                                let replyWriterId = value.replyWriterId;
+                                let replyWriterName = value.replyWriterName;
                                 let replyWriteDate = value.replyWriteDate;
                                 let replyModifyDate = value.replyModifyDate;
                                 let replyContent = value.replyContent;
                                 let replyDepth = value.replyDepth;
+                                let replyWriterImg = value.replyWriterImg;
                                 result += "<div id='reply-" + replyId + "' style='border: 1px solid #cccccc; margin-left:" + replyDepth * 20 + "px'>";
                                 if (replyDepth !== 0) {
                                     result += "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-arrow-return-right' viewBox='0 0 16 16'>" +
                                         "  <path fill-rule='evenodd' d='M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z'/>" +
                                         "</svg>"
                                 }
-                                result += "<b>" + replyWriterId + "</b>";
+                                result += "<img src='"+replyWriterImg+"' style='border-radius: 20px; width: 35px; height: 35px'>"
+                                result += "<b>&nbsp" + replyWriterName + "</b>";
                                 result += "<p>작성일 :" + replyWriteDate + "</p>";
                                 if(replyModifyDate != null){
                                 result += "<p>수정일 : " + replyModifyDate + "</p>";
                                 }
                                 result += "<pre class='content'>" + replyContent + "</pre>";
-                                if (replyWriterId === [[${session.login}]]) {
                                     result += "<button type='button' class='btn btn-primary btn-sm'  id='add-" + replyId + "'>대댓글</button>"
                                     result += "<button type='button' class='btn btn-primary btn-sm'  id='modify-" + replyId + "'>수정</button>"
                                     result += "<button type='button' class='btn btn-primary btn-sm' id='delete-" + replyId + "'>삭제</button>"
-                                }
                                 result += "</div>"
                             })
                         }
@@ -238,10 +238,10 @@
         <br>
         <div id="content" th:utext="${board.getBoardContent}"></div>
     <div>
-        <button th:if="${session.login == board.getBoardWriter}" class="btn btn-primary float-right"
+        <button th:if="${session.user != null && session.user.memberEmail == board.getBoardWriter}" class="btn btn-primary float-right"
                 id="mod" name="mod"
                 type="button">수정</button>
-        <button th:if="${session.login == board.getBoardWriter}" class="btn btn-primary float-left"
+        <button th:if="${session.user != null && session.user.memberEmail == board.getBoardWriter}" class="btn btn-primary float-left"
                 id="del" name="del"
                 type="button">삭제
         </button>

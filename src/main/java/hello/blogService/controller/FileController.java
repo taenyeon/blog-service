@@ -91,7 +91,7 @@ public class FileController {
         List<FileInfo> fileInfos = null;
         HashMap<String,Object> map = new HashMap<>();
         try {
-            fileInfos = fileService.boardFileUpload(upload, 0);
+            fileInfos = fileService.boardFileUpload(upload, "0");
         for (FileInfo fileInfo : fileInfos){
             map.put("uploaded",1);
             map.put("url","/file/img?filePath="+ fileInfo.getFilePath());

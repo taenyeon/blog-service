@@ -36,12 +36,12 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public OAuthUser toDomain(){
+    public OAuthUser toDTO(){
         return OAuthUser.builder()
-                .name(name)
-                .email(email)
-                .picture(picture)
-                .role("ROLE_USER")
+                .memberName(name)
+                .memberEmail(email)
+                .memberImg(picture)
+                .memberRole("ROLE_USER")
                 .build();
     }
 }
