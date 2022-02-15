@@ -7,32 +7,22 @@
     <div class="py-5 text-center">
         <h2>Login</h2>
     </div>
-    <form action="/members/login" method="post">
-        <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-        <div>
-            <label for="memberId">ID</label>
-            <input type="text" id="memberId" name="memberId" class="form-control"
-                   placeholder="아이디를 입력하세요.">
-        </div>
-        <div>
-            <label for="memberPwd">PWD</label>
-            <input type="password" id="memberPwd" name="memberPwd" class="form-control"
-                   placeholder="비밀번호를 입력하세요.">
-        </div>
-        <hr class="my-4">
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">로그인
-                </button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        onclick="location.href='item.html'" th:onclick="|location.href='@{/}'|"
-                        type="button">취소
-                </button>
-            </div>
-        </div>
-    </form>
+    <div class="row text-center w-100">
+
+    <div class="col-6" style="margin-top: 15%; font-size: large">
+        <p>해당 블로그는 사용자의 동의로 제공받는</p>
+        <p><b style="color: #ec2d2d">email</b>과 <b style="color: #ec2d2d">profile</b> 이외의 정보는 수집하지 않으며,</p>
+        <p>해당 정보는 댓글 작성시에만 사용됩니다.</p>
+    </div>
+    <div class="col-6" style="margin-top: 15%">
+        <h4>소셜 로그인 하기</h4>
+        <br>
+        <a href="/oauth2/authorization/google">
+            <img src="/img/googleLogin.png" alt="" >
+        </a>
+    </div>
+    </div>
+
 </div> <!-- /container -->
 </body>
 </html>

@@ -9,7 +9,8 @@
         $(function () {
         let modifyStatus = false;
         let addStatus = false;
-            let boardId = $("#boardId").text();
+        let start = 1;
+        let boardId = $("#boardId").text();
             // 로딩 완료시 댓글 불러오기
             getReply();
 
@@ -54,14 +55,17 @@
                 $.ajax({
                     type: "GET",
                     url: "/reply/get/" + boardId,
-                    data: {},
+                    data: {"start" : start},
                     dataType: "json",
                     success: function (data) {
                         let result = "";
                         if (data.reply.length === 0) {
                             result += "<div>댓글이 없습니다.</div>"
                         } else {
+                                start += 9;
                             $.each(data.reply, function (key, value) {
+                                // 성공시, 이후 start 는 10 단위로 시작됨.
+
                                 let replyId = value.replyId;
                                 let replyWriterName = value.replyWriterName;
                                 let replyWriteDate = value.replyWriteDate;
@@ -87,8 +91,14 @@
                                     result += "<button type='button' class='btn btn-primary btn-sm' id='delete-" + replyId + "'>삭제</button>"
                                 result += "</div>"
                             })
+                                result += "<button class='w-100 btn btn-primary btn-sm' id='moreReply' name='moreReply'>더보기</button>"
                         }
-                        $("#replyDiv").html(result);
+                        if (start === 1){
+                            $("#replyDiv").html(result);
+                        } else {
+                            $("#moreReply").remove();
+                        $("#replyDiv").append(result);
+                        }
                     }
                 });
             }
@@ -109,6 +119,7 @@
                         statusCode: {
                             200: function () {
                                 alert("댓글 삭제에 성공하였습니다.")
+                                start =1;
                                 getReply();
                             },
                             300: function () {
@@ -137,6 +148,7 @@
                             200: function () {
                                 modifyStatus = false;
                                 alert("댓글 수정에 성공하였습니다.")
+                                start=1;
                                 getReply();
                             },
                             300: function () {
@@ -194,6 +206,7 @@
                     statusCode: {
                         200: function () {
                             alert("댓글 삭제에 성공하였습니다.")
+                            start = 1;
                             getReply();
                         },
                         300: function () {
@@ -204,12 +217,16 @@
             })
 
             $(document).on("click", "[id^=cancel]", function () {
+                start = 1;
                 getReply();
             });
 
             // 게시판으로 돌아감
             $(document).on("click", "#menu", function () {
                 location.href = "/board";
+            })
+            $(document).on("click", "#moreReply", function () {
+                getReply();
             })
         });
         /*]]>*/

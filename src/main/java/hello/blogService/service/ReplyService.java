@@ -22,8 +22,8 @@ public class ReplyService {
         this.replyRepository = replyRepository;
         this.memberRepository = memberRepository;
     }
-    public List<Reply> findById(String boardId){
-        List<Reply> replies = replyRepository.findByBoardId(boardId);
+    public List<Reply> findById(String boardId,String start){
+        List<Reply> replies = replyRepository.findByBoardId(boardId,start);
         for (Reply reply : replies){
             Optional<OAuthUser> userOptional = memberRepository.findByEmail(reply.getReplyWriter());
             OAuthUser user = userOptional.orElseThrow(() -> new IllegalStateException("Not Found User"));
@@ -38,8 +38,7 @@ public class ReplyService {
     public int addReply(Reply reply){
         reply.setReplyWriteDate(DateSet.getNow());
         if (reply.getReplyParentId() == 0){
-            int order = replyRepository.findMaxReplyOrderByBoardId(String.valueOf(reply.getBoardId()))+1;
-            reply.setReplyOrder(order);
+            replyRepository.updateReplyOrderWhenAddDefaultReply();
         }
         else {
             System.out.println(reply.getReplyParentId());

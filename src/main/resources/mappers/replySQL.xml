@@ -10,7 +10,7 @@
         REPLY_PARENT_ID, REPLY_DEPTH, REPLY_ORDER)
         values ( #{replyId}
         , #{replyContent}
-        , #{replyWriterId}
+        , #{replyWriter}
         , #{replyWriteDate}
         , #{replyModifyDate,jdbcType=DATE}
         , #{boardId}
@@ -18,7 +18,7 @@
             <when test="replyParentId==0">
                 , #{replyId}
                 , #{replyDepth}
-                , #{replyOrder}
+                , #{1}
             </when>
             <otherwise>
                 , #{replyParentId}
@@ -41,6 +41,9 @@
         set REPLY_ORDER=REPLY_ORDER + 1
         where REPLY_ORDER > #{replyOrder}
     </update>
+    <update id="updateReplyOrderWhenAddDefaultReply">
+        update REPLY set REPLY_ORDER= REPLY_ORDER +1
+    </update>
 
     <delete id="deleteReply">
         delete REPLY
@@ -57,19 +60,18 @@
         order by REPLY_ID desc
     </select>
 
+
     <select id="findByBoardId" resultType="hello.blogService.dto.Reply">
-        select reply_id
-             , reply_content
-             , reply_writer
-             , reply_write_date
-             , board_id
-             , REPLY_MODIFY_DATE
-             , REPLY_PARENT_ID
-             , REPLY_DEPTH
-             , REPLY_ORDER
-        from REPLY
-        where BOARD_ID = #{boardId}
-        order by REPLY_ORDER
+        <![CDATA[
+        SELECT *
+        FROM (select *
+        from (SELECT ROW_NUMBER() over (order by reply_order desc) AS num,
+        r.*
+        FROM reply r
+        where board_id = #{boardId})
+        WHERE rownum < #{start}+9)
+        WHERE #{start} <= num
+        ]]>
     </select>
 
     <select id="findByReplyId" resultType="hello.blogService.dto.Reply">

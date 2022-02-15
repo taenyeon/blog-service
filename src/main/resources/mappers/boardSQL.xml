@@ -15,7 +15,7 @@
         set board_title=#{boardTitle},
             board_content=#{boardContent},
             board_modify_date = #{boardModifyDate}
-        where id = #{boardId}
+        where board_id = #{boardId}
     </update>
     <update id="hitUp">
         update BOARD

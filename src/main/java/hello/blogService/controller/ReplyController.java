@@ -21,9 +21,9 @@ public class ReplyController {
     }
 
     @GetMapping("/get/{boardId}")
-    public Map<String, List<Reply>> getReply(@PathVariable String boardId) {
+    public Map<String, List<Reply>> getReply(@PathVariable String boardId,@RequestParam String start) {
         Map<String, List<Reply>> map = new HashMap<>();
-        map.put("reply", replyService.findById(boardId));
+        map.put("reply", replyService.findById(boardId,start));
         ResponseEntity.ok(map);
         return map;
     }

@@ -41,6 +41,7 @@ public class Pagination {
         } else {
             this.startPage = 1;
         }
+
         if (pageCnt - page >= 2) {
             if (page < 3){
                 this.endPage = 5;

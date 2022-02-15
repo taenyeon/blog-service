@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/login",
                         "/board",
+                        "/board/{boardId}",
                         "/file/**",
                         "/img/**",
                         "/css/**",
@@ -49,8 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/ckeditor/**",
                         "/js/**",
                         "/reply/get/**",
-                        "/getAjax").permitAll()
-                .antMatchers("/board/add").hasRole("ADMIN")
+                        "/authError").permitAll()
+                .antMatchers("/board/{boardId}/**","/board/add").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()

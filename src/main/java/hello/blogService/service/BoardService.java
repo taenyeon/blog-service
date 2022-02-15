@@ -55,7 +55,9 @@ public class BoardService {
     public String createBoard(Board board,List<MultipartFile> fileList) throws IOException {
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Seoul"));
         board.setBoardWriteDate(now);
+        for (int i=0; i<100; i++){
         boardRepository.insertBoard(board);
+        }
         if (!fileList.get(0).isEmpty()){
         List<FileInfo> fileInfos = fileService.boardFileUpload(fileList, board.getBoardId());
         fileService.insertFiles(fileInfos);
